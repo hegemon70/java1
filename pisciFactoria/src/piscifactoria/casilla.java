@@ -66,58 +66,57 @@ public class casilla {
         String trazo="";
        if (T||P){ //HAY BICHO
            if(T&&P){ //BREED tiburon come pez
-                if(x==0 && y!=tamY-1){//casillas del lateral izquierdo
-                    trazo="/_X/";
+                 if(x==0 ){//casillas del lateral izquierdo
+                trazo="/_X/";
                 }
-                else if(x==tamX && y==0){//casilla del inferior derecha
+                else if(x==tamX-1 && y==0){//casilla del inferior derecha
                     trazo="_X|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_X/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
                     trazo="_X/|";
-                }else trazo="_X/";//casilla normal
+                }else trazo="_X/";
            }else if(T){//Hay tiburon
-                if(x==0 && y!=tamY-1){//casillas del lateral izquierdo
-                    trazo="/_T/";
+                if(x==0 ){//casillas del lateral izquierdo
+                trazo="/_T/";
                 }
-                else if(x==tamX && y==0){//casilla del inferior derecha
+                else if(x==tamX-1 && y==0){//casilla del inferior derecha
                     trazo="_T|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_T/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
                     trazo="_T/|";
-                }else trazo="_T/";//casilla normal
+                }else trazo="_T/";
            }else{//hay pez
-               if(x==0 && y!=tamY-1){//casillas del lateral izquierdo
-                    trazo="/_P/";
+                if(x==0 ){//casillas del lateral izquierdo
+                trazo="/_P/";
                 }
-                else if(x==tamX && y==0){//casilla del inferior derecha
+                else if(x==tamX-1 && y==0){//casilla del inferior derecha
                     trazo="_P|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_P/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
                     trazo="_P/|";
-                }else trazo="_P/";//casilla normal
-               
-               
+                }else trazo="_P/";
+
            }
            
            
            
        }else{ //casilla vacia
            
-            if(x==0 && y!=tamY-1){//casillas del lateral izquierdo
+            if(x==0){//casillas del lateral izquierdo
                 trazo="/__/";
             }
-            else if(x==tamX && y==0){//casilla del inferior derecha
+            else if(x==tamX-1 && y==0){//casilla del inferior derecha
                 trazo="__|/";
             }
-            else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
+            else if((x==tamX-1) && (y!=tamY)){ //casillas del lateral derecho
                 trazo="__/|/";
-            }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
+            }else if ((x==tamX-1)&& y==tamY){ //casilla superior derecha
                 trazo="__/|";
             }else trazo="__/";
        }

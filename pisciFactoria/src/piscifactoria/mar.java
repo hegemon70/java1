@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 package piscifactoria;
-import piscifactoria.casilla;
+//import piscifactoria.casilla;
+import java.util.ArrayList;
 /**
  *
  * @author Fernando
@@ -13,7 +14,8 @@ public class mar {
     public int dimX;
     public int dimY;
     public int numNiv;
-    public nivel [] vectorNiveles=new nivel[numNiv];
+    public ArrayList vNiveles = new ArrayList <nivel>();
+   // public nivel [] vectorNiveles=new nivel[numNiv];
     
    
    public mar(int numNiv, int tamX, int tamY){
@@ -26,7 +28,8 @@ public class mar {
    public void creaNiveles(){
        for (int i=0; i<=this.numNiv; i++){
            nivel cursor= new nivel(this.dimX,this.dimY);
-           this.vectorNiveles [i]=cursor;
+           this.vNiveles.add(cursor);
+            //this.vectorNiveles [i]=(nivel)cursor;
        }
        
    }
@@ -36,12 +39,21 @@ public class mar {
         int c = 0;
         if (this.numNiv > 1) {
             marPintado[0]="demasiados niveles, beta solo un nivel";    
-          
        }else{
-        for(String cursor: this.vectorNiveles[0].pintaNivel()){
-            c++;
-            marPintado[c]=cursor;
-        }
+           nivel cursor; 
+           cursor=(nivel)this.vNiveles.get(0);
+           marPintado= cursor.pintaNivel();
+            //for(String cursor: this.vNiveles.iterator().hasNext())
+//            for(int i=0; i<= numNiv;i++)
+//            {
+//
+//                    cursor=(String)this.vNiveles.get(0);
+//                     marPintado[i]=cursor;
+//            }
+//            for(String cursor: this.vectorNiveles[0].pintaNivel()){
+//            c++;
+//            marPintado[c]=cursor;
+//        }
         }
             
    return marPintado; 

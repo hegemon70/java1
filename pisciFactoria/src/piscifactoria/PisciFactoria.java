@@ -72,8 +72,8 @@ public class PisciFactoria {
         int nNiveles,tamX,tamY;
         System.out.println("vamos a crea una piscifactoria");
         nNiveles=pideDatoNumerico("dime el numero de Niveles","dame un numero valido de niveles");
-        tamX=pideDatoNumerico("dime el ancho del nivel","dame un ancho valido");
-        tamY=pideDatoNumerico("dime el largo del nivel","dame un largo valido");
+        tamX=pideDatoNumerico("dime el X del nivel","dame un X valido");
+        tamY=pideDatoNumerico("dime el Y del nivel","dame un Y valido");
         System.out.println("pintando....");
         mar Oceano = new mar(nNiveles,tamX,tamY);
         String [] lienzo = new String [tamY+1];
