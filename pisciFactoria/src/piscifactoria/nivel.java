@@ -77,10 +77,6 @@ public class nivel {
         fila=shiftT+fila;//añado el desplazamiento a la fila
         for (int x=0; x<=this.dimensionX-1;x++){//bucle de casillas
             fila=fila+this.casillero1.get(y).get(x).pintaCasilla(x, y,this.dimensionX,this.dimensionY, this.casillero1.get(y).get(x).isHayPez(), this.casillero1.get(y).get(x).isHayTiburon());
-            //indice=this.vNivel[x][y];
-            //casilla cursor=(casilla) this.casillero.get(indice);
-                   //fila=fila+cursor.pintaCasilla(x,y,this.dimensionX,this.dimensionX,false,false);
-            //fila=fila+this.vNivel[x][y].pintaCasilla(x, y, this.dimensionX, this.dimensionY, false, false);
         }
         dibNivel[contFila]=fila;//añado la fila completa
         fila="";

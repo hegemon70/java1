@@ -58,6 +58,6 @@ public class mar {
             
    return marPintado; 
    }
- 
+public void pueblaMar(){}
    
 }
