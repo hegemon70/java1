@@ -82,19 +82,23 @@ public class PisciFactoria {
                   
     }
     
-    public static boolean IntroOEsc(){
-         KeyEvent e;
-    if (e.getKeyCode() == KeyEvent.VK_ENTER)
-    {
-    System.out.println("enter the name or number of month: ");
-    int monthNumber=input.nextInt();
-    }
-    else if (Keyboard.getEventKey()==Keyboard.KEY_ESCAPE)
-    {
-        System.out.println("GoodBye");
-    }
+
+    
+    public static boolean AnyKeyToCancel_EnterToContinue(String peticion){
+           String mensaje;
+        
+        java.util.Scanner sc =new Scanner(System.in);
+        System.out.println(peticion);
+        mensaje=sc.nextLine();
+                
+         
+        if (mensaje.isEmpty()) {
+            return true;
+        }
+       
     return false;
     }
+            
      public static int pideDatoNumericoConDefault(String peticion,String peticionSiFallo,String vDefecto,String avisoXDefect){
         //pre: peticion es el mensaje de la primera peticion, peticion si fallo las sucesivos mensajes de peticion         
         // el valor por defecto ha de ser el valor de un entero valido
@@ -138,17 +142,25 @@ public class PisciFactoria {
         breedT=pideDatoNumericoConDefault("dime cada cuanto crian los Tiburones [10]","dame un numero valido","10","10 elegido ...");
         breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
         feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
-        pideEnter("dame un enter para continuar");
-        System.out.println("pintando....");
+        //pideEnter("dame un enter para continuar");
+        if ( AnyKeyToCancel_EnterToContinue("enter to continue or anykey to cancel")) {
+            
+            
+             System.out.println("pintando....");
+
+                    aclara(25);
+                    mar Oceano = new mar(nNiveles,tamX,tamY);
+                    String [] lienzo = new String [tamY+1];
+
+                    for (String cursor:  Oceano.pintaMar() ){
+                        System.out.println(cursor);
+                    }
+                    aclara(5);
+        }else
+            System.out.println("adios");
         
-        aclara(25);
-        mar Oceano = new mar(nNiveles,tamX,tamY);
-        String [] lienzo = new String [tamY+1];
-     
-        for (String cursor:  Oceano.pintaMar() ){
-            System.out.println(cursor);
-        }
-        aclara(5);
+ 
+                   
             //int numNiv, int tamX, int tamY
         
 //        java.util.Scanner sc =new Scanner(System.in);
