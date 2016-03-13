@@ -98,7 +98,16 @@ public class PisciFactoria {
        
     return false;
     }
+            public static void refrescaPantalla(mar Oceano){
+                     for (String cursor:  Oceano.pintaMarcador() ){
+                        System.out.println(cursor);
+                    }
+                    for (String cursor:  Oceano.pintaMar() ){
+                        System.out.println(cursor);
+                    }
+                    aclara(5);
             
+            }
      public static int pideDatoNumericoConDefault(String peticion,String peticionSiFallo,String vDefecto,String avisoXDefect){
         //pre: peticion es el mensaje de la primera peticion, peticion si fallo las sucesivos mensajes de peticion         
         // el valor por defecto ha de ser el valor de un entero valido
@@ -129,7 +138,7 @@ public class PisciFactoria {
     public static void main(String[] args) {
         // TODO code application logic here
         String mensaje;
-        int nNiveles,tamX,tamY,maxBug,numberT,numberP,lifeSpanT,lifeSpanP,breedP,breedT,feedT,feedP;
+        int nNiveles,tamX,tamY,maxBug,numberT,numberP,lifeSpanT,lifeSpanP,breedP,breedT,feedT,feedP,porcentajeT;
         System.out.println("vamos a crea una piscifactoria");
         //nNiveles=pideDatoNumerico("dime el numero de Niveles","dame un numero valido de niveles");
         nNiveles=pideDatoNumericoConDefault("dime el numero de Niveles [1]","dame un numero valido de niveles","1","1 nivel elegido ...");
@@ -142,20 +151,25 @@ public class PisciFactoria {
         breedT=pideDatoNumericoConDefault("dime cada cuanto crian los Tiburones [10]","dame un numero valido","10","10 elegido ...");
         breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
         feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
+        porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces","dame un numero valido","10","10% elegido");
         //pideEnter("dame un enter para continuar");
         if ( AnyKeyToCancel_EnterToContinue("enter to continue or anykey to cancel")) {
             
             
              System.out.println("pintando....");
 
-                    aclara(25);
-                    mar Oceano = new mar(nNiveles,tamX,tamY);
-                    String [] lienzo = new String [tamY+1];
-
-                    for (String cursor:  Oceano.pintaMar() ){
-                        System.out.println(cursor);
-                    }
-                    aclara(5);
+                    aclara(1);
+                    mar Oceano = new mar(nNiveles,tamX,tamY,maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT);
+                    refrescaPantalla(Oceano);
+                    //int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT
+                   // String [] lienzo = new String [tamY+1];
+//                       for (String cursor:  Oceano.pintaMarcador() ){
+//                        System.out.println(cursor);
+//                    }
+//                    for (String cursor:  Oceano.pintaMar() ){
+//                        System.out.println(cursor);
+//                    }
+//                    aclara(5);
         }else
             System.out.println("adios");
         
