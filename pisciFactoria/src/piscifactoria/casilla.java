@@ -12,7 +12,7 @@ package piscifactoria;
 public class casilla {
     private int posicionX;
     private int posicionY;
-    //public int nivel;
+    private int nivel;
     private boolean hayPez;
     private boolean hayTiburon;
     
@@ -27,6 +27,15 @@ public class casilla {
         //this.nivel=nivel;
     }
 
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+
+    
     public int getPosicionX() {
         return posicionX;
     }
@@ -62,45 +71,49 @@ public class casilla {
     
     
     public String pintaCasilla(int x,int y,int tamX, int tamY,boolean T,boolean P){
+      
+        String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
+        String pez=console.getStringInColor(console.ANSI_GREEN,"P");
+        String ira=console.getStringInColor(console.ANSI_RED,"X");
         
         String trazo="";
        if (T||P){ //HAY BICHO
            if(T&&P){ //BREED tiburon come pez
                  if(x==0 ){//casillas del lateral izquierdo
-                trazo="/_X/";
+                trazo="/_"+ira+"/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_X|/";
+                    trazo="_"+ira+"|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
-                    trazo="_X/|/";
+                    trazo="_"+ira+"/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
-                    trazo="_X/|";
-                }else trazo="_X/";
+                    trazo="_"+ira+"/|";
+                }else trazo="_"+ira+"/";
            }else if(T){//Hay tiburon
                 if(x==0 ){//casillas del lateral izquierdo
-                trazo="/_T/";
+                trazo="/_"+tib+"/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_T|/";
+                    trazo="_"+tib+"|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
-                    trazo="_T/|/";
+                    trazo="_"+tib+"/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
-                    trazo="_T/|";
-                }else trazo="_T/";
+                    trazo="_"+tib+"/|";
+                }else trazo="_"+tib+"/";
            }else{//hay pez
                 if(x==0 ){//casillas del lateral izquierdo
-                trazo="/_P/";
+                trazo="/_"+pez+"/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_P|/";
+                    trazo="_|"+pez+"/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
-                    trazo="_P/|/";
+                    trazo="_/"+pez+"|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
-                    trazo="_P/|";
-                }else trazo="_P/";
+                    trazo="_/"+pez+"|";
+                }else trazo="_/"+pez+"";
 
            }
            

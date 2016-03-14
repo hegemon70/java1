@@ -7,6 +7,7 @@ package piscifactoria;
 //import piscifactoria.casilla;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 /**
  *
  * @author Fernando
@@ -17,6 +18,7 @@ public class mar {
     public int numNiv;
     public ArrayList vNiveles = new ArrayList <nivel>();
     public ArrayList vContadores = new ArrayList <Integer>();
+    
    // public nivel [] vectorNiveles=new nivel[numNiv];
     
    public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT){
@@ -123,6 +125,49 @@ public class mar {
         return mcd;
     }
    
-public void pueblaMar(){}
+public void pueblaMar(){
+   creaPeces();
+   creaTiburones();
    
 }
+
+public void creaPeces(){
+   
+
+}
+public void creaTiburones(){}
+public casilla dameCasillaAleatoria(
+){
+    casilla casActual=new casilla();
+    Random rnd =new Random();
+      int nivelElecto,xElect,yElect;
+      //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
+      nivelElecto=(int)rnd.nextDouble() * this.numNiv + 0;
+      xElect=(int)rnd.nextDouble() * this.dimX + 0;
+      yElect=(int)rnd.nextDouble() * this.dimY + 0;
+     // this.vNiveles.get(nivelElecto).vNivel.get(xElect).get(yElect);
+      
+      nivel cursor =new nivel();
+              cursor=(nivel)this.vNiveles.get(nivelElecto);
+              casActual=cursor.casillero1.get(xElect).get(yElect);
+              
+      return casActual;
+}
+
+
+
+    public boolean esCasillaVacia(casilla cas){
+      return(! cas.isHayPez()) && (!cas.isHayTiburon());
+            
+       
+    }
+    
+    public void dameNumTiburones(){
+    //numero de peces proporcional al numero de peces
+    }
+    public void dameNumPeces(){
+    //numero de peces proporcional a 1 tiburon
+        
+    }
+}
+

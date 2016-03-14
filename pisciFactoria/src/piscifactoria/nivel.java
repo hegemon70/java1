@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class nivel {
    public int dimensionX;
    public int dimensionY;
-    public int[][] vNivel = new int[dimensionX][dimensionY];
+    //public int[][] vNivel = new int[dimensionX][dimensionY];
     //public ArrayList casillero = new ArrayList <casilla>();
     public ArrayList<ArrayList<casilla>> casillero1 = new ArrayList<ArrayList<casilla>>();
    

@@ -99,9 +99,11 @@ public class PisciFactoria {
     return false;
     }
             public static void refrescaPantalla(mar Oceano){
+                aclara(5);
                      for (String cursor:  Oceano.pintaMarcador() ){
                         System.out.println(cursor);
                     }
+                     aclara(2);
                     for (String cursor:  Oceano.pintaMar() ){
                         System.out.println(cursor);
                     }
