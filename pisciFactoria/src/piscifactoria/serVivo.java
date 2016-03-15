@@ -10,7 +10,12 @@ package piscifactoria;
  * @author Fernando
  */
 public interface serVivo {
-    casilla nace();
+
+    /**
+     *
+     * @param cuna
+     */
+    void nace(casilla cuna);
     casilla mueve();
     casilla reproduce();
     casilla muere();

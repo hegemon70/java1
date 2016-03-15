@@ -7,7 +7,7 @@ package piscifactoria;
 public abstract class Acuatico implements serVivo {
     protected casilla posicion;
     protected boolean vivo;
-    protected nivel profundidad;
+    protected int profundidad;
     
     
     Acuatico(){
@@ -17,18 +17,18 @@ public abstract class Acuatico implements serVivo {
     
     
     @Override
-    public casilla nace(){
-        casilla casIni =new casilla();
-      return   casIni;
+    public void nace(casilla cuna){
+            this.profundidad=cuna.getNivel();
+            this.posicion=cuna;
+            this.vivo=true;
     }
     
       
-    public casilla nace(casilla cuna){
-      
-      return   cuna;
-    }
-  
-
+//    public void nace(casilla cuna){
+//        this.profundidad=cuna.getNivel();
+//        this.posicion=cuna;
+//        this.vivo=true;
+//    }
     public casilla getPosicion() {
         return posicion;
     }
@@ -45,11 +45,11 @@ public abstract class Acuatico implements serVivo {
         this.vivo = vivo;
     }
 
-    public nivel getProfundidad() {
+    public int getProfundidad() {
         return profundidad;
     }
 
-    public void setProfundidad(nivel profundidad) {
+    public void setProfundidad(int profundidad) {
         this.profundidad = profundidad;
     }
 

@@ -26,7 +26,10 @@ public class nivel {
         creaColumnas();
         creaCasillas();
     }
-   
+   public void ponEnNivel(casilla cas){
+       this.casillero1.add(cas.getPosicionX(),this.casillero1.get(cas.getPosicionY()));
+       
+   }
    private void creaColumnas(){
         for(int i=0;i<=this.dimensionY;i++){//filas Y
             this.casillero1.add(new ArrayList <casilla>());

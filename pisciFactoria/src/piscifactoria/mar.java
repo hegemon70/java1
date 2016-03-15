@@ -8,6 +8,7 @@ package piscifactoria;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
 /**
  *
  * @author Fernando
@@ -21,9 +22,9 @@ public class mar {
     
    // public nivel [] vectorNiveles=new nivel[numNiv];
     
-   public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT){
+   public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario, int tamChrono){
             this(numNiv,tamX,tamY);
-             actualizaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT);
+             actualizaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
    
    }
    public mar(int numNiv, int tamX, int tamY){
@@ -34,7 +35,7 @@ public class mar {
        
    }
    
-   public void actualizaContadores(int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT){
+   public void actualizaContadores(int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario,int tamChrono){
         this.vContadores.add(maxBug);//pos 0
         this.vContadores.add(lifeSpanT);//pos 1
         this.vContadores.add (lifeSpanP);//pos 2
@@ -44,6 +45,8 @@ public class mar {
         this.vContadores.add(porcentajeT);//pos 6
         this.vContadores.add(0);//pos 7 tiburones vivos
         this.vContadores.add(0);//pos 8 peces vivos
+        this.vContadores.add(duracionEscenario);//pos 9 duracion Escenario
+        this.vContadores.add(tamChrono);//pos 10 espera del refresco en segundos
         
         
    }
@@ -53,16 +56,16 @@ public class mar {
             contadorPintado[0]="maximo Numero de animales: " + (int)this.vContadores.get(0);
             contadorPintado[0]=contadorPintado[0]+"####Relacion peces Tiburones: ";
              
-            if ((int)this.vContadores.get(6) >= 101) {//en caso de que el numero de tiburones sea mayor que los peces
-                resto=(int)this.vContadores.get(6)%100;//por debajo de 100
-                multiplicador=(int)this.vContadores.get(6)/100;//multiplos de 100
-                basePeces=100-resto;//si fuera porcentajes de 100 %
-                baseTiburones=basePeces*multiplicador;//multiplicamos los tiburones respecto a la tasa dada
-                tasaDiv=mcd(basePeces,baseTiburones);//hallamos el minimo comun divisor para reducir la fraccion basePeces/baseTiburones
-                //contadorPintado[0]= " "+ Arrays.toString(contadorPintado)+ 100-resto+"/";
-                peces=basePeces/tasaDiv;//reducimos el denominador peces
-                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
-                contadorPintado[0]= contadorPintado[0] + peces +"/"+tiburones; 
+            if ((int)this.vContadores.get(6) >= 101) {//en caso de que el numero de tiburones sea mas del doble que peces
+//                resto=(int)this.vContadores.get(6)%100;//por debajo de 100
+//                multiplicador=(int)this.vContadores.get(6)/100;//multiplos de 100
+//                basePeces=100-resto;//si fuera porcentajes de 100 %
+//                baseTiburones=basePeces*multiplicador;//multiplicamos los tiburones respecto a la tasa dada
+//                tasaDiv=Mcd(basePeces,baseTiburones);//hallamos el minimo comun divisor para reducir la fraccion basePeces/baseTiburones
+//                //contadorPintado[0]= " "+ Arrays.toString(contadorPintado)+ 100-resto+"/";
+//                peces=basePeces/tasaDiv;//reducimos el denominador peces
+//                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
+                contadorPintado[0]= contadorPintado[0] + dameNumPeces() +"/"+dameNumTiburones(); 
             }else
                 contadorPintado[0]= contadorPintado[0] + (100-(int)this.vContadores.get(6)) + "/"+(int)this.vContadores.get(6);
             contadorPintado[1]="            Tiburones vivos: "+this.vContadores.get(7);
@@ -71,7 +74,8 @@ public class mar {
             contadorPintado[2]=contadorPintado[2]+"####tiempo vida peces: "+this.vContadores.get(2);
             contadorPintado[3]="   tiempo crianza tiburones: "+this.vContadores.get(3);
             contadorPintado[3]=contadorPintado[3]+"####tiempo crianza peces: "+this.vContadores.get(4);
-            contadorPintado[4]="tiempo resistencia al hambre tiburones: "+this.vContadores.get(5);            
+            contadorPintado[4]="tiempo resistencia al hambre tiburones: "+this.vContadores.get(5); 
+            contadorPintado[4]=contadorPintado[4]+"####duracion del escenario: "+this.vContadores.get(9);
             
             
            
@@ -113,10 +117,16 @@ public class mar {
    }
    
   
-   public static int mcd(int num1, int num2) {
+   public static int Mcd(int num1, int num2) {
+       //pre:
+       //post: devuelve el maximo coun divisor de los dos numeros
+       //se usa para simplificar fracciones
         int mcd = 0;
-        int a = Math.max(num1, num2);
-        int b = Math.min(num1, num2);
+        int numerador,denominador;
+        numerador=Math.abs(num1);
+        denominador=Math.abs(num2);
+        int a = Math.max(numerador, denominador);
+        int b = Math.min(numerador, denominador);
         do {
             mcd = b;
             b = a%b;
@@ -131,20 +141,94 @@ public void pueblaMar(){
    
 }
 
+public void decrementaContadorGenerico(int i){
+    //decrementa el contador indicado por i
+     Integer c;
+     c=(Integer)this.vContadores.get(i);
+           c--;
+           this.vContadores.add(i,c);
+}
+ 
+public void incrementaContadorGenerico(int i){
+     Integer c;
+     c=(Integer)this.vContadores.get(i);
+           c++;
+           this.vContadores.add(i,c);
+ }
+
+ public void incrementaContadorPeces(){
+     Integer c;
+     c=(Integer)this.vContadores.get(7);
+           c++;
+           this.vContadores.add(7,c);
+ }
+ 
+public void decrementaContadorPeces(){
+     Integer c;
+     c=(Integer)this.vContadores.get(7);
+           c--;
+           this.vContadores.add(7,c);
+ 
+ }
+ public void incrementaContadorTiburones(){
+     Integer c;
+     c=(Integer)this.vContadores.get(8);
+           c++;
+           this.vContadores.add(8,c);
+ }
+ 
+public void decrementaContadorTiburones(){
+     Integer c;
+     c=(Integer)this.vContadores.get(8);
+           c--;
+           this.vContadores.add(8,c);
+ 
+ }
+public void pongoEnMar(casilla cas){
+    nivel nivelAct;
+        nivelAct=(nivel) this.vNiveles.get(cas.getNivel());
+        nivelAct.ponEnNivel(cas);
+}
 public void creaPeces(){
-   
+    
+   int numPeces=dameNumPeces();
+   do{
+       casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
+       if (esCasillaVacia(cuna)) {//si esta vacia
+           Pez pezActual=new Pez();//creo pez
+            pezActual.nace(cuna);//le indico donde esta
+            pongoEnMar(cuna);//lo pongo en el mar
+           incrementaContadorPeces();
+            numPeces--;
+       }
+      
+   }while (numPeces<=0);
 
 }
-public void creaTiburones(){}
-public casilla dameCasillaAleatoria(
-){
+public void creaTiburones(){
+        int numTiburones=dameNumTiburones();
+do{
+       casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
+       if (esCasillaVacia(cuna)) {//si esta vacia
+           Tiburon TibActual=new Tiburon();//creo Tiburon
+            TibActual.nace(cuna);//le indico donde esta
+            pongoEnMar(cuna);//lo pongo en el mar
+           incrementaContadorTiburones();
+            numTiburones--;
+       }
+      
+   }while (numTiburones<=0);
+}
+public casilla dameCasillaAleatoria(){
+    double rand;
     casilla casActual=new casilla();
     Random rnd =new Random();
       int nivelElecto,xElect,yElect;
       //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
-      nivelElecto=(int)rnd.nextDouble() * this.numNiv + 0;
-      xElect=(int)rnd.nextDouble() * this.dimX + 0;
-      yElect=(int)rnd.nextDouble() * this.dimY + 0;
+      rand=rnd.nextDouble();
+      nivelElecto=(int)(rnd.nextDouble() * this.numNiv + 0);
+      xElect=(int)(rnd.nextDouble() * this.dimX + 0);
+      yElect=(int)(rnd.nextDouble() * this.dimY + 0);
      // this.vNiveles.get(nivelElecto).vNivel.get(xElect).get(yElect);
       
       nivel cursor =new nivel();
@@ -158,16 +242,54 @@ public casilla dameCasillaAleatoria(
 
     public boolean esCasillaVacia(casilla cas){
       return(! cas.isHayPez()) && (!cas.isHayTiburon());
-            
-       
     }
     
-    public void dameNumTiburones(){
-    //numero de peces proporcional al numero de peces
+    public int dameNumTiburones(){
+    //post: devuelve el numero de peces proporcional al numero de peces
+        int resto,multiplicador,basePeces,baseTiburones;
+        int porT=(int)this.vContadores.get(6);
+        if (porT==100) {//no hay peces
+            return 1;
+        }else if(porT>=101){
+                resto=(int)this.vContadores.get(6)%100;//por debajo de 100
+                multiplicador=(int)this.vContadores.get(6)/100;//multiplos de 100
+                basePeces=100-resto;//si fuera porcentajes de 100 %
+                baseTiburones=basePeces*multiplicador;//multiplicamos los tiburones respecto a la tasa dada
+//                tasaDiv=Mcd(basePeces,baseTiburones);//hallamos el minimo comun divisor para reducir la fraccion basePeces/baseTiburones
+//                //contadorPintado[0]= " "+ Arrays.toString(contadorPintado)+ 100-resto+"/";
+//                peces=basePeces/tasaDiv;//reducimos el denominador peces
+//                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
+                return baseTiburones/Mcd(basePeces,baseTiburones);
+        }else{
+            return porT/Mcd(porT,100-porT);
+                }
     }
-    public void dameNumPeces(){
+    public int dameNumPeces(){
     //numero de peces proporcional a 1 tiburon
-        
+        int nPeces;
+        int porcentajeT=(int)this.vContadores.get(6);
+        if (porcentajeT==100) {//100% tiburones no hay peces
+            return 0;
+        }else if(porcentajeT ==0){//no hay tiburones
+            return 1;
+        }
+        else if (porcentajeT>=101)
+        {//el doble de tiburones que de peces
+        return 1;
+        }else//porcentaje entre 1 y 99%
+            //si 98% tiburones devuelvo 1 pez y serian 49 tiburones
+            //si 2% tiburones devuelvo 49 peces y seria un solo tiburon
+            
+                   nPeces=(100-porcentajeT)/ Mcd(porcentajeT,100-porcentajeT); 
+        return nPeces;
+   
+    }   
+    
+    public void resuelveEscenario() throws InterruptedException{
+            decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
+            
     }
 }
+
+  
 

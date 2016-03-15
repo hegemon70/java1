@@ -10,7 +10,9 @@ package piscifactoria;
  * @author Fernando
  */
 public class Pez extends Acuatico {
-
+    Pez(){
+    this.posicion.setHayPez(true);
+    }
     @Override
     public casilla mueve() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -26,9 +28,5 @@ public class Pez extends Acuatico {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public casilla nace() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }
