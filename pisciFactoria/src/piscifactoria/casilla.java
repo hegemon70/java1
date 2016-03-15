@@ -75,8 +75,9 @@ public class casilla {
         String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
         String pez=console.getStringInColor(console.ANSI_GREEN,"P");
         String ira=console.getStringInColor(console.ANSI_RED,"X");
+        String cas=console.getStringInColor(console.ANSI_RESET,"");
         
-        String trazo="";
+        String trazo=cas+"";
        if (T||P){ //HAY BICHO
            if(T&&P){ //BREED tiburon come pez
                  if(x==0 ){//casillas del lateral izquierdo

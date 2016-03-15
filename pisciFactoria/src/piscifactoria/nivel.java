@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package piscifactoria;
+import static java.lang.System.exit;
 import java.util.ArrayList;
 
 /**
@@ -27,8 +28,24 @@ public class nivel {
         creaCasillas();
     }
    public void ponEnNivel(casilla cas){
-       this.casillero1.add(cas.getPosicionX(),this.casillero1.get(cas.getPosicionY()));
-       
+       int indexY,indexX;
+       indexX=cas.getPosicionX();
+       indexY=cas.getPosicionY();
+       try { 
+           //ArrayList <casilla> cur = new ArrayList <casilla>();
+           //cur.add((casilla)this.casillero1.get(indexY).get(indexX));
+           this.casillero1.get(indexY).get(indexX).setNivel((int)cas.getNivel());
+          // this.casillero1.get(indexY).get(indexX).isHayPez(cas.isHayPez());
+           
+          //this.casillero1.add(indexY,this.casillero1.get(indexY).add(indexX,cas));
+          
+         //  this.casillero1.add(indexY,(indexX,((casilla)this.casillero1.get(indexY).get(indexX))));
+       //this.casillero1.add(indexY,this.casillero1.get(indexX));
+       }catch(Exception e){
+           
+           System.out.println(""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+"" );
+           //System.exit(indexX);
+       };
    }
    private void creaColumnas(){
         for(int i=0;i<=this.dimensionY;i++){//filas Y

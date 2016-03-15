@@ -10,9 +10,7 @@ package piscifactoria;
  * @author Fernando
  */
 public class Tiburon extends Acuatico {
-    Tiburon(){
-        this.posicion.setHayTiburon(true);
-    }
+ 
     @Override
     public casilla mueve() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

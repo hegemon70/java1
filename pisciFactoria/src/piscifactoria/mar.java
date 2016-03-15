@@ -142,7 +142,18 @@ public void pueblaMar(){
 }
 
 public void decrementaContadorGenerico(int i){
-    //decrementa el contador indicado por i
+  //post: decrementa el contador indicado por i
+ //         maxBug //pos 0
+//         lifeSpanT //pos 1
+//        lifeSpanP //pos 2
+//         breedT //pos 3
+//         breedP //pos 4
+//         feedT //pos 5
+//         porcentajeT //pos 6
+//         //pos 7 tiburones vivos
+//         //pos 8 peces vivos
+//         duracionEscenario //pos 9 duracion Escenario
+//         tamChrono //pos 10 espera del refresco en segundos
      Integer c;
      c=(Integer)this.vContadores.get(i);
            c--;
@@ -150,6 +161,18 @@ public void decrementaContadorGenerico(int i){
 }
  
 public void incrementaContadorGenerico(int i){
+     //post: decrementa el contador indicado por i
+//         maxBug //pos 0
+//         lifeSpanT //pos 1
+//        lifeSpanP //pos 2
+//         breedT //pos 3
+//         breedP //pos 4
+//         feedT //pos 5
+//         porcentajeT //pos 6
+//         //pos 7 tiburones vivos
+//         //pos 8 peces vivos
+//         duracionEscenario //pos 9 duracion Escenario
+//         tamChrono //pos 10 espera del refresco en segundos
      Integer c;
      c=(Integer)this.vContadores.get(i);
            c++;
@@ -165,16 +188,16 @@ public void incrementaContadorGenerico(int i){
  
 public void decrementaContadorPeces(){
      Integer c;
-     c=(Integer)this.vContadores.get(7);
+     c=(Integer)this.vContadores.get(8);
            c--;
-           this.vContadores.add(7,c);
+           this.vContadores.add(8,c);
  
  }
  public void incrementaContadorTiburones(){
      Integer c;
-     c=(Integer)this.vContadores.get(8);
+     c=(Integer)this.vContadores.get(7);
            c++;
-           this.vContadores.add(8,c);
+           this.vContadores.add(7,c);
  }
  
 public void decrementaContadorTiburones(){
@@ -195,6 +218,7 @@ public void creaPeces(){
    do{
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
        if (esCasillaVacia(cuna)) {//si esta vacia
+           cuna.setHayPez(true);
            Pez pezActual=new Pez();//creo pez
             pezActual.nace(cuna);//le indico donde esta
             pongoEnMar(cuna);//lo pongo en el mar
@@ -202,7 +226,7 @@ public void creaPeces(){
             numPeces--;
        }
       
-   }while (numPeces<=0);
+   }while (numPeces >=0);
 
 }
 public void creaTiburones(){
@@ -210,6 +234,7 @@ public void creaTiburones(){
 do{
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
        if (esCasillaVacia(cuna)) {//si esta vacia
+            cuna.setHayTiburon(true);
            Tiburon TibActual=new Tiburon();//creo Tiburon
             TibActual.nace(cuna);//le indico donde esta
             pongoEnMar(cuna);//lo pongo en el mar
@@ -217,11 +242,11 @@ do{
             numTiburones--;
        }
       
-   }while (numTiburones<=0);
+   }while (numTiburones >=0);
 }
 public casilla dameCasillaAleatoria(){
     double rand;
-    casilla casActual=new casilla();
+   // casilla casActual=new casilla();
     Random rnd =new Random();
       int nivelElecto,xElect,yElect;
       //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
@@ -232,8 +257,9 @@ public casilla dameCasillaAleatoria(){
      // this.vNiveles.get(nivelElecto).vNivel.get(xElect).get(yElect);
       
       nivel cursor =new nivel();
-              cursor=(nivel)this.vNiveles.get(nivelElecto);
-              casActual=cursor.casillero1.get(xElect).get(yElect);
+      cursor=(nivel)this.vNiveles.get(nivelElecto);
+      casilla casActual=new casilla();
+      casActual= (casilla)cursor.casillero1.get(yElect).get(xElect);
               
       return casActual;
 }
@@ -246,6 +272,7 @@ public casilla dameCasillaAleatoria(){
     
     public int dameNumTiburones(){
     //post: devuelve el numero de peces proporcional al numero de peces
+        int nTiburones;
         int resto,multiplicador,basePeces,baseTiburones;
         int porT=(int)this.vContadores.get(6);
         if (porT==100) {//no hay peces
@@ -261,7 +288,9 @@ public casilla dameCasillaAleatoria(){
 //                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
                 return baseTiburones/Mcd(basePeces,baseTiburones);
         }else{
-            return porT/Mcd(porT,100-porT);
+            nTiburones=porT/Mcd(porT,100-porT);
+            return nTiburones;
+                    
                 }
     }
     public int dameNumPeces(){
