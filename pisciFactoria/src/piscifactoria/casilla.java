@@ -15,6 +15,15 @@ public class casilla {
     private int nivel;
     private boolean hayPez;
     private boolean hayTiburon;
+    private boolean actualizado;
+
+    public boolean isActualizado() {
+        return actualizado;
+    }
+
+    public void setActualizado(boolean actualizado) {
+        this.actualizado = actualizado;
+    }
     
      public casilla(){
      }
@@ -24,6 +33,7 @@ public class casilla {
         this.posicionY=y;
         this.hayPez=false;
         this.hayTiburon=false;
+        this.actualizado=false;
         //this.nivel=nivel;
     }
 
@@ -70,12 +80,16 @@ public class casilla {
     
     
     
-    public String pintaCasilla(int x,int y,int tamX, int tamY,boolean T,boolean P){
+    public String pintaCasilla(int x,int y,int tamX, int tamY,boolean P,boolean T){
       
-        String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
-        String pez=console.getStringInColor(console.ANSI_GREEN,"P");
-        String ira=console.getStringInColor(console.ANSI_RED,"X");
-        String cas=console.getStringInColor(console.ANSI_RESET,"");
+//        String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
+//        String pez=console.getStringInColor(console.ANSI_GREEN,"P");
+//        String ira=console.getStringInColor(console.ANSI_RED,"X");
+//        String cas=console.getStringInColor(console.ANSI_RESET,"");
+        String tib="T"; 
+        String pez="P";
+        String ira="X";
+        String cas="";
         
         String trazo=cas+"";
        if (T||P){ //HAY BICHO

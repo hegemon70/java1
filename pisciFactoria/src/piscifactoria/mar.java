@@ -20,6 +20,7 @@ public class mar {
     public ArrayList vNiveles = new ArrayList <nivel>();
     public ArrayList vContadores = new ArrayList <Integer>();
     
+    
    // public nivel [] vectorNiveles=new nivel[numNiv];
     
    public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario, int tamChrono){
@@ -137,7 +138,7 @@ public class mar {
    
 public void pueblaMar(){
    creaPeces();
-   creaTiburones();
+   creaTiburones(false);
    
 }
 
@@ -226,14 +227,17 @@ public void creaPeces(){
             numPeces--;
        }
       
-   }while (numPeces >=0);
+   }while (numPeces >0);
 
 }
-public void creaTiburones(){
+public void creaTiburones(boolean test){
+    //boolean test=true;
         int numTiburones=dameNumTiburones();
 do{
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
        if (esCasillaVacia(cuna)) {//si esta vacia
+           if (test)
+           System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
             cuna.setHayTiburon(true);
            Tiburon TibActual=new Tiburon();//creo Tiburon
             TibActual.nace(cuna);//le indico donde esta
@@ -242,7 +246,7 @@ do{
             numTiburones--;
        }
       
-   }while (numTiburones >=0);
+   }while (numTiburones >0);
 }
 public casilla dameCasillaAleatoria(){
     double rand;
@@ -316,7 +320,31 @@ public casilla dameCasillaAleatoria(){
     
     public void resuelveEscenario() throws InterruptedException{
             decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
+            quitaMarcaActualizado();
+            //resuelveCaza()
+            mueveTiburones();
+            //muevePeces()
+           
             
+    }
+    
+    public void mueveTiburones(){
+   //pre:
+   //post: 
+        nivel nivelAct;
+        for (int i = 0; i < this.numNiv; i++) {
+                 nivelAct=(nivel) this.vNiveles.get(i);
+                 nivelAct.mueveTiburonesEnNivel();
+        }
+    }
+    public void quitaMarcaActualizado(){
+    //pre:
+   //post:pone todas las casilla del mar a no actualizado
+         nivel nivelAct;
+        for (int i = 0; i < this.numNiv; i++) {
+                nivelAct=(nivel) this.vNiveles.get(i);
+                nivelAct.quitaMarcaActualizadoEnNivel();
+        }
     }
 }
 

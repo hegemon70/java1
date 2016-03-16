@@ -6,6 +6,7 @@
 package piscifactoria;
 import static java.lang.System.exit;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -17,6 +18,7 @@ public class nivel {
     //public int[][] vNivel = new int[dimensionX][dimensionY];
     //public ArrayList casillero = new ArrayList <casilla>();
     public ArrayList<ArrayList<casilla>> casillero1 = new ArrayList<ArrayList<casilla>>();
+    public ArrayList vCazas =new ArrayList <casilla>();
    
    nivel(){}
    
@@ -145,6 +147,398 @@ public class nivel {
 
         
         return fila;
+    }
+    public void quitaMarcaActualizadoEnNivel(){
+    //pre:
+   //post:
+        for (int y = 0; y < this.dimensionY; y++) {
+            for (int x = 0; x < this.dimensionX; x++) {
+                this.casillero1.get(y).get(x).setActualizado(false);
+            }
+        }
+                
+        
+    }
+    
+    public void mueveTiburonesEnNivel(){
+        casilla cursor;
+        for (int y = 0; y < this.dimensionY; y++) {
+            for (int x = 0; x < this.dimensionX; x++) {
+                cursor=this.casillero1.get(y).get(x);
+                if (! cursor.isActualizado()){//si no ha sido antes actualizado
+                       if (cursor.isHayTiburon()) {//si hay tiburon
+                        if(!cursor.isHayPez()){//si no hay caza
+                            decideMovimientoTiburonEnNivel(cursor);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void colocaEnDestino(casilla origen,casilla destino,boolean hayCaza){
+        if (hayCaza){
+            
+            
+        }else{
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(true);//quito el tiburon en el origen
+            
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
+        }
+    }
+    
+    public boolean esCasillaVacia(casilla cas){
+        return (!cas.isHayPez())&&(!cas.isHayTiburon());
+    }
+    public void decideMovimientoTiburonEnNivel(casilla origen){
+        casilla destino=dameCasillaAleatoriaContigua(origen);
+        if(esCasillaVacia(destino)){
+            colocaEnDestino(origen,destino,false);
+        }
+        else{//hay bicho
+            if (destino.isHayPez()) {//movemos y tiburon come
+                colocaEnDestino(origen,destino,true);
+            }//si es un tiburon no hacemos nada  
+            
+        }
+            
+
+            
+       
+    }
+    
+    public casilla dameCasillaAleatoriaContigua(casilla origen){
+    double rand;
+    casilla casDestino=new casilla();
+    Random rnd =new Random();
+      int xElect,yElect,rumbo;
+      //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
+      rand=rnd.nextDouble();
+      rumbo=(int)(rnd.nextDouble() * 8 + 0);
+             casDestino=dameCasillaDestino(rumbo,origen);
+      return casDestino;
+}
+    public boolean estaEnBorde(casilla cas){
+        return (cas.getPosicionX()==0)||(cas.getPosicionY()==0)||(cas.getPosicionX()==this.dimensionX-1)||(cas.getPosicionX()==this.dimensionY);
+    }
+    public casilla dameCasillaDestino(int rumbo,casilla origen){
+        casilla casDestino=new casilla();
+        int x=origen.getPosicionX();
+        int y=origen.getPosicionY();
+        if(estaEnBorde(origen)){
+//                      
+            if((x==0)&&(y==0)){//esquina NO
+                switch (rumbo) {
+                    case 0://se mueve al norte y sale al sur
+                        y=this.dimensionY-1;
+                    break;
+                    case 1://se mueve al NE y sale al sur con deriva este
+                        y=this.dimensionY-1;
+                        x++;
+                    break;
+                    case 2://se mueve al este
+                        x++;
+                    break;
+                    case 3://se mueve al SE
+                        x++;
+                        y++;
+                    break;
+                    case 4://se mueve al Sur
+                        y++;
+                    break;
+                    case 5://se mueve al SO y sale al Este con deriva sur
+                        x=this.dimensionX-1;
+                        y++;
+                    break;
+                    case 6://se mueve al oeste y sale al este
+                        x=this.dimensionX-1;
+                    break;
+                    case 7://se mueve al NO y sale por la esquina SE
+                        x=this.dimensionX-1;
+                        y=this.dimensionY-1;
+                    break;
+                    default:
+                        throw new AssertionError();
+                }
+            }else if((x==this.dimensionX-1)||(y==this.dimensionY-1)){//esquina SE
+                switch (rumbo) {
+                    case 0://se mueve N 
+                        y--;
+                    break;
+                    case 1://se mueve NE y sale al O con deriva N
+                        x=0;
+                        y--;
+                    break;
+                    case 2://se mueve E y sale por el O
+                        x=0;
+                    break;
+                    case 3://se mueve SE y sale por la esquina NO
+                        x=0;
+                        y=0;
+                    break;
+                    case 4://se mueve S y sale por el N
+                        y=0;
+                    break;
+                    case 5://se mueve SO y sale por el N con deriva O
+                        y=0;
+                        x--;
+                    break;
+                    case 6://se mueve O
+                        x--;
+                    break;
+                    case 7://se mueve NO
+                        x--;
+                        y--;
+                    break;
+                    
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            else if((x==0)&&(y==this.dimensionY-1)){//esquina SO
+                    switch (rumbo) {
+                    case 0://se mueve al N
+                        y--;
+                    break;
+                    case 1://se mueve al NE
+                        y--;
+                        x++;
+                    break;
+                    case 2://se mueve al E
+                        x++;
+                    break;
+                    case 3://se mueve al SE y sale al N con deriva E
+                         y=0;
+                         x++;
+                    break;
+                    case 4://se mueve al S y sale al N
+                        y=0;
+                    break;
+                    case 5://se mueve al SO y sale en la esquina NE
+                        x=this.dimensionX-1;
+                        y=0;
+                    break;
+                    case 6://se mueve al O y sale al E
+                        x=this.dimensionX-1;
+                    break;
+                    case 7://se mueve al NO y sale al E con deriva N
+                        x=this.dimensionX-1;
+                        y--;
+                    break;
+                    
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            else if ((y==0)&&(x==this.dimensionX-1)){//esquina NE
+                switch (rumbo) {
+                    case 0://se mueve al N y sale por la esquina SE
+                        x=this.dimensionX-1;
+                        y=this.dimensionY-1;
+                    break;
+                    case 1://se mueve al NE y se  poe la esquina SO
+                         x=0;
+                         y=this.dimensionY;
+                    break;
+                    case 2://se mueve al E y salgo por la esquina NO
+                        x=0;
+                        y=0;
+                    break;
+                    case 3://se mueve al SE sale al Oeste con deriva S
+                        x=0;
+                        y++;
+                    break;
+                    case 4://se mueve al S
+                        y++;
+                    break;
+                    case 5://se mueve al SO
+                        x--;
+                        y++;
+                    break;
+                    case 6://se mueve al O
+                        x--;
+                    break;
+                    case 7://se mueve al NO y sale por el Sur con deriva O
+                        x--;
+                        y=this.dimensionY-1;
+                    break;
+                    
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            else if(x==0){//borde Oeste
+                switch (rumbo) {
+                    case 0://N
+                    y--;
+                    break;
+                 case 1://NE
+                    x++;
+                    y--;
+                    break;
+                case 2://E
+                    x++;
+                    break;
+                case 3://SE
+                    x++;
+                    y++;
+                    break;
+                case 4://S
+                    y++;
+                break;
+                case 5://SO y sale al E con deriva S
+                    x=this.dimensionX-1;
+                    y++;
+                    break;
+                case 6://O y sale al E
+                    x=this.dimensionX-1;
+                break;
+                case 7://NO y sale al E con deriva N
+                    x=this.dimensionX-1;
+                    y--;
+                break;
+                    
+                    default:
+                        throw new AssertionError();
+                }
+            
+            }else if(y==0){//borde Norte
+                switch (rumbo) {
+                     case 0://N y sale por el S
+                    y=this.dimensionY-1;
+                    break;
+                 case 1://NE y sale por el S con deriva E
+                    x++;
+                    y=this.dimensionY-1;
+                    break;
+                case 2://E
+                    x++;
+                    break;
+                case 3://SE
+                    x++;
+                    y++;
+                    break;
+                case 4://S
+                    y++;
+                break;
+                case 5://SO
+                    x--;
+                    y++;
+                    break;
+                case 6://O
+                    x--;
+                break;
+                case 7://NO y sale por el S con deriva O
+                    x--;
+                    y=this.dimensionY-1;
+                break;
+                    default:
+                        throw new AssertionError();
+                }
+                
+            }else if (x==this.dimensionX-1){//borde Este
+                switch (rumbo) {
+                    case 0://N
+                    y--;
+                    break;
+                 case 1://NE y sale al O con deriva N
+                    x=0;
+                    y--;
+                    break;
+                case 2://E y sale al O
+                    x=0;
+                    break;
+                case 3://SE y sale al O con deriva S
+                    x=0;
+                    y++;
+                    break;
+                case 4://S
+                    y++;
+                break;
+                case 5://SO
+                    x--;
+                    y++;
+                    break;
+                case 6://O
+                    x--;
+                break;
+                case 7://NO
+                    x--;
+                    y--;
+                break;
+                    default:
+                        throw new AssertionError();
+                }
+            }else{//y==this.dimensionY //borde Sur
+                switch (rumbo) {
+                    case 0://N
+                    y--;
+                    break;
+                 case 1://NE
+                    x++;
+                    y--;
+                    break;
+                case 2://E
+                    x++;
+                    break;
+                case 3://SE y sale por el N con deriva E
+                    x++;
+                    y=0;
+                    break;
+                case 4://S y sale por el N
+                    y=0;
+                break;
+                case 5://SO y sale por el N con deriva O
+                    x--;
+                    y=0;
+                    break;
+                case 6://O
+                    x--;
+                break;
+                case 7://NO
+                    x--;
+                    y--;
+                break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+                
+        }else{//no esta al borde
+            switch (rumbo) {
+                case 0://N
+                    y--;
+                    break;
+                 case 1://NE
+                    x++;
+                    y--;
+                    break;
+                case 2://E
+                    x++;
+                    break;
+                case 3://SE
+                    x++;
+                    y++;
+                    break;
+                case 4://S
+                    y++;
+                break;
+                case 5://SO
+                    x--;
+                    y++;
+                    break;
+                case 6://O
+                    x--;
+                break;
+                case 7://NO
+                    x--;
+                    y--;
+                break;
+                default:
+                    throw new AssertionError();
+            }
+    }
+        casDestino=this.casillero1.get(y).get(x);
+    return casDestino;
     }
 }
 

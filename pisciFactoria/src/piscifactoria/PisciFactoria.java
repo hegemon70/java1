@@ -188,13 +188,13 @@ public class PisciFactoria {
                     Oceano.pueblaMar();
                     refrescaPantalla(Oceano);
                     //int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT
-//                  while((int)Oceano.vContadores.get(9)>0){
-//                       Thread.sleep(tamChrono*1000);
-//               
-//                     Oceano.resuelveEscenario();
-//                     refrescaPantalla(Oceano);
-//               
-//                  }
+                  while((int)Oceano.vContadores.get(9)>0){
+                       Thread.sleep(tamChrono*1000);
+               
+                     Oceano.resuelveEscenario();
+                     refrescaPantalla(Oceano);
+               
+                  }
                           
         }else
             System.out.println("adios");
