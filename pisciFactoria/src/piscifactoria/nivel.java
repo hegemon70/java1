@@ -15,17 +15,19 @@ import java.util.Random;
 public class nivel {
    public int dimensionX;
    public int dimensionY;
+   public int numPeces,numTiburones;
     //public int[][] vNivel = new int[dimensionX][dimensionY];
     //public ArrayList casillero = new ArrayList <casilla>();
     public ArrayList<ArrayList<casilla>> casillero1 = new ArrayList<ArrayList<casilla>>();
-    public ArrayList vCazas =new ArrayList <casilla>();
+    //public ArrayList vCazas =new ArrayList <casilla>();
    
    nivel(){}
    
    nivel(int tamX,int tamY){
         this.dimensionX=tamX;
         this.dimensionY=tamY;
-     
+        this.numPeces=0;
+        this.numTiburones=0;
         creaColumnas();
         creaCasillas();
     }
@@ -34,20 +36,19 @@ public class nivel {
        indexX=cas.getPosicionX();
        indexY=cas.getPosicionY();
        try { 
-           //ArrayList <casilla> cur = new ArrayList <casilla>();
-           //cur.add((casilla)this.casillero1.get(indexY).get(indexX));
            this.casillero1.get(indexY).get(indexX).setNivel((int)cas.getNivel());
-          // this.casillero1.get(indexY).get(indexX).isHayPez(cas.isHayPez());
-           
-          //this.casillero1.add(indexY,this.casillero1.get(indexY).add(indexX,cas));
-          
-         //  this.casillero1.add(indexY,(indexX,((casilla)this.casillero1.get(indexY).get(indexX))));
-       //this.casillero1.add(indexY,this.casillero1.get(indexX));
        }catch(Exception e){
            
            System.out.println(""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+"" );
            //System.exit(indexX);
        };
+       if (cas.isHayPez()) {//si es pez incremento el contado de peces en el nivel
+           this.numPeces++;
+       }
+       if (cas.isHayTiburon()) {//si es tiburon incremento el contado de tiburones en el nivel
+           this.numTiburones++;
+       }
+
    }
    private void creaColumnas(){
         for(int i=0;i<=this.dimensionY;i++){//filas Y
@@ -176,13 +177,17 @@ public class nivel {
         }
     }
     public void colocaEnDestino(casilla origen,casilla destino,boolean hayCaza){
-        if (hayCaza){
+        if (hayCaza){//no muevo el tiburon y se come al pez
             
+            this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+          
             
         }else{
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(true);//quito el tiburon en el origen
-            
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
             this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+            this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
         }
     }
     
@@ -192,11 +197,11 @@ public class nivel {
     public void decideMovimientoTiburonEnNivel(casilla origen){
         casilla destino=dameCasillaAleatoriaContigua(origen);
         if(esCasillaVacia(destino)){
-            colocaEnDestino(origen,destino,false);
+            colocaEnDestino(origen,destino,false);//no haycaza
         }
         else{//hay bicho
             if (destino.isHayPez()) {//movemos y tiburon come
-                colocaEnDestino(origen,destino,true);
+                colocaEnDestino(origen,destino,true);//haycaza
             }//si es un tiburon no hacemos nada  
             
         }
@@ -214,13 +219,13 @@ public class nivel {
       //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
       rand=rnd.nextDouble();
       rumbo=(int)(rnd.nextDouble() * 8 + 0);
-             casDestino=dameCasillaDestino(rumbo,origen);
+             casDestino=dameCasillaDestino(rumbo,origen,false);
       return casDestino;
 }
     public boolean estaEnBorde(casilla cas){
         return (cas.getPosicionX()==0)||(cas.getPosicionY()==0)||(cas.getPosicionX()==this.dimensionX-1)||(cas.getPosicionX()==this.dimensionY);
     }
-    public casilla dameCasillaDestino(int rumbo,casilla origen){
+    public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test ){
         casilla casDestino=new casilla();
         int x=origen.getPosicionX();
         int y=origen.getPosicionY();

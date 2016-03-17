@@ -25,7 +25,7 @@ public class mar {
     
    public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario, int tamChrono){
             this(numNiv,tamX,tamY);
-             actualizaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
+             creaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
    
    }
    public mar(int numNiv, int tamX, int tamY){
@@ -36,7 +36,7 @@ public class mar {
        
    }
    
-   public void actualizaContadores(int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario,int tamChrono){
+   public void creaContadores(int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario,int tamChrono){
         this.vContadores.add(maxBug);//pos 0
         this.vContadores.add(lifeSpanT);//pos 1
         this.vContadores.add (lifeSpanP);//pos 2
@@ -49,6 +49,22 @@ public class mar {
         this.vContadores.add(duracionEscenario);//pos 9 duracion Escenario
         this.vContadores.add(tamChrono);//pos 10 espera del refresco en segundos
         
+        
+   }
+   public void actualizaContadores(){
+       nivel cursor;
+        int numTiburonesTodosNiveles,numPecesTodosNiveles;
+        numTiburonesTodosNiveles=0;
+        numPecesTodosNiveles=0;
+         for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
+                 cursor=(nivel) this.vNiveles.get(i);
+//                 nivelAct.mueveTiburonesEnNivel();
+                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + cursor.numTiburones;//sumamos los tiburones en cada nivel
+                 numPecesTodosNiveles=numPecesTodosNiveles+cursor.numPeces;//sumamos los peces en cada nivel
+                 this.vContadores.add(7,numTiburonesTodosNiveles);
+                 this.vContadores.add(8,numPecesTodosNiveles);
+                 
+        }
         
    }
    public String[] pintaMarcador(){
@@ -200,7 +216,7 @@ public void decrementaContadorPeces(){
            c++;
            this.vContadores.add(7,c);
  }
- 
+
 public void decrementaContadorTiburones(){
      Integer c;
      c=(Integer)this.vContadores.get(8);
@@ -267,9 +283,6 @@ public casilla dameCasillaAleatoria(){
               
       return casActual;
 }
-
-
-
     public boolean esCasillaVacia(casilla cas){
       return(! cas.isHayPez()) && (!cas.isHayTiburon());
     }
@@ -286,10 +299,6 @@ public casilla dameCasillaAleatoria(){
                 multiplicador=(int)this.vContadores.get(6)/100;//multiplos de 100
                 basePeces=100-resto;//si fuera porcentajes de 100 %
                 baseTiburones=basePeces*multiplicador;//multiplicamos los tiburones respecto a la tasa dada
-//                tasaDiv=Mcd(basePeces,baseTiburones);//hallamos el minimo comun divisor para reducir la fraccion basePeces/baseTiburones
-//                //contadorPintado[0]= " "+ Arrays.toString(contadorPintado)+ 100-resto+"/";
-//                peces=basePeces/tasaDiv;//reducimos el denominador peces
-//                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
                 return baseTiburones/Mcd(basePeces,baseTiburones);
         }else{
             nTiburones=porT/Mcd(porT,100-porT);
@@ -324,7 +333,7 @@ public casilla dameCasillaAleatoria(){
             //resuelveCaza()
             mueveTiburones();
             //muevePeces()
-           
+            actualizaContadores();
             
     }
     
@@ -332,10 +341,14 @@ public casilla dameCasillaAleatoria(){
    //pre:
    //post: 
         nivel nivelAct;
-        for (int i = 0; i < this.numNiv; i++) {
+//        int numTiburonesTodosNiveles,numPecesTodosNiveles;
+//        numTiburonesTodosNiveles=0;
+        for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
                  nivelAct=(nivel) this.vNiveles.get(i);
                  nivelAct.mueveTiburonesEnNivel();
+//                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + nivelAct.numTiburones;//sumamos los tiburones en cada nivel
         }
+        
     }
     public void quitaMarcaActualizado(){
     //pre:

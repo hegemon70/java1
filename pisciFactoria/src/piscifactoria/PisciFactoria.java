@@ -145,6 +145,7 @@ public class PisciFactoria {
         // TODO code application logic here
         String mensaje;
         int nNiveles,tamX,tamY,maxBug,numberT,numberP,lifeSpanT,lifeSpanP,breedP,breedT,feedT,feedP,porcentajeT,duracionEscenario,tamChrono;
+        boolean test;
                 nNiveles=1;
                 tamX=33;
                 tamY=22;
@@ -154,9 +155,10 @@ public class PisciFactoria {
                 breedT=10;
                 breedP=3;
                 feedT=6;
-                porcentajeT=10;
+                porcentajeT=2;
                 duracionEscenario=255;
                 tamChrono=4;
+                test=false;
         System.out.println("vamos a crear una pecera");
         if (!AnyKeyToCancel_EnterToContinue("pulsa enter para valores por defecto o cualquier otra tecla para  ajustarlos manualmente")){
     
@@ -172,7 +174,7 @@ public class PisciFactoria {
                 breedT=pideDatoNumericoConDefault("dime cada cuanto crian los Tiburones [10]","dame un numero valido","10","10 elegido ...");
                 breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
                 feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
-                porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces","dame un numero valido","10","10% elegido");
+                porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces[2]","dame un numero valido","2","2% elegido");
                 duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario","dame un numero valido","255","255 refrescos de pantalla elegido");
                 tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos","dame un numero valido","4","4 segundos elegido");
         }
