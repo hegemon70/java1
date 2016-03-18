@@ -314,11 +314,15 @@ public static String padLeft(String s, int n) {
 	
 	}
      public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test ){
+         //pre:
+         //post:movimientos cartesianos el origen  de coordenadas x=0 y Y=0 esta al SO;
+         //rumbo 0://N y++; rumbo 1://NE x++; y++; rumbo 2://E x++; rumbo 3://SE x++; y--; 
+         //rumbo 4://S y--; rumbo 5://SO x--; y--; rumbo 6://O x--; rumbo 7://NO x--; y++;
         casilla casDestino=new casilla();
         int x=origen.getPosicionX();
         int y=origen.getPosicionY();
         if(estaEnBorde(origen)){
-//                      
+            //estan mal las posiciones del los bordes                     
             if((x==0)&&(y==0)){//esquina NO
                 switch (rumbo) {
                     case 0://se mueve al norte y sale al sur
@@ -732,13 +736,13 @@ public static String padLeft(String s, int n) {
             switch (rumbo) {
                 case 0://N
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y--;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE
                      testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y--;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
@@ -749,18 +753,18 @@ public static String padLeft(String s, int n) {
                 case 3://SE
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y++;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y++;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y++;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
@@ -771,7 +775,7 @@ public static String padLeft(String s, int n) {
                 case 7://NO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y--;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 default:
