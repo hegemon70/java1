@@ -156,7 +156,7 @@ public class PisciFactoria {
                 breedP=3;
                 feedT=6;
                 porcentajeT=2;
-                duracionEscenario=255;
+                duracionEscenario=15;
                 tamChrono=4;
                 test=false;
         System.out.println("vamos a crear una pecera");
@@ -178,7 +178,7 @@ public class PisciFactoria {
                 breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
                 feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
                 porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces[2]","dame un numero valido","2","2% elegido");
-                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario[255]","dame un numero valido","255","255 refrescos de pantalla elegido");
+                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario[15]","dame un numero valido","15","15 refrescos de pantalla elegido");
                 tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos[4]","dame un numero valido","4","4 segundos elegido");
         }
         
@@ -190,7 +190,7 @@ public class PisciFactoria {
 
                     aclara(1);
                     mar Oceano = new mar(nNiveles,tamX,tamY,maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
-                    Oceano.pueblaMar();
+                    Oceano.pueblaMar(test);
                     refrescaPantalla(Oceano,test);
                     //int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT
                   while((int)Oceano.vContadores.get(9)>0){

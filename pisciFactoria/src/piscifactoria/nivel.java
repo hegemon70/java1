@@ -51,17 +51,19 @@ public class nivel {
 
    }
    private void creaColumnas(){
-        for(int i=0;i<=this.dimensionY;i++){//filas Y
+       // for(int i=0;i<=this.dimensionY;i++){//filas Y
+       for(int i=0;i<this.dimensionY;i++){//filas Y
             this.casillero1.add(new ArrayList <casilla>());
         }
    }
    
    private void creaCasillas(){
-      
-       for(int i=0;i<=this.dimensionY;i++){//filas Y
-           for (int j=0;j<=this.dimensionX;j++){//columnas X
-               casilla cursor=new casilla(j,i);//creo una casilla
-               this.casillero1.get(i).add(j,cursor);//con i saco la linea
+        //for(int i=0;i<=this.dimensionY;i++){//filas Y
+       for(int y=0;y<this.dimensionY;y++){//filas Y
+           //for (int j=0;j<=this.dimensionX;j++){//columnas X
+           for (int x=0;x<this.dimensionX;x++){//columnas X
+               casilla cursor=new casilla(x,y);//creo una casilla
+               this.casillero1.get(y).add(x,cursor);//con i saco la linea
                
          
            }
@@ -88,17 +90,20 @@ public class nivel {
            contaShift--;
        }
          contaShift=this.dimensionX;//recupero contaShift
-    for(int y=this.dimensionY; y>0;y--){//bucle de filas desde arriba
+         //for(int y=this.dimensionY-1; y>0;y--){//bucle de filas desde arriba
+    for(int y=this.dimensionY-1; y>=0;y--){//bucle de filas desde arriba
         try{
         shiftT=shiftT.substring(0,contaShift);//reduzco el desplazamiento
         }catch(Exception e){
-            System.out.println( e.getMessage()+"#79 nivel");
-
+            System.out.println( e.getMessage()+"#97 error en pintaNivel nivel");
         }
         contaShift--;//reduzco el contador del desplazamiento
         contFila++;//indice de fila
         fila=shiftT+fila;//añado el desplazamiento a la fila
-        for (int x=0; x<=this.dimensionX-1;x++){//bucle de casillas
+        //for (int x=0; x<=this.dimensionX-1;x++){//bucle de casillas
+        for (int x=0; x<this.dimensionX;x++){//bucle de casillas
+        //for (int x=this.dimensionX; x>0 ;x--){//bucle de casillas
+           
             fila=fila+this.casillero1.get(y).get(x).pintaCasilla(x, y,this.dimensionX,this.dimensionY, this.casillero1.get(y).get(x).isHayPez(), this.casillero1.get(y).get(x).isHayTiburon(),test);
         }
         if (test){
@@ -109,11 +114,11 @@ public class nivel {
         fila="";
         
     }
-     dibNivel[this.dimensionY+1]=PonPie(shiftT);
+     dibNivel[this.dimensionY]=PonPie(shiftT);
      if (test){
-        dibNivel[this.dimensionY+2]=PonPieNumerico(shiftT);
+        dibNivel[this.dimensionY+1]=PonPieNumerico(shiftT);
      }else
-         dibNivel[this.dimensionY+2]="";
+         dibNivel[this.dimensionY+1]="";
    return dibNivel;
    }
    
@@ -147,7 +152,7 @@ public class nivel {
         tapaInf="__|";
         
       fila="|";
-      for (int i=0;i<=this.dimensionX-2;i++){//    creamos la linea superior de cierre
+      for (int i=0;i<this.dimensionX-1;i++){//    creamos la linea superior de cierre con el ultimo sin mostrar
          fila=fila+tapaInf;
       }
         //fila=shift+fila;
@@ -160,7 +165,7 @@ public class nivel {
     public String PonPieNumerico(String shift){
         String fila="";int n=3;
         String m;
-    for (int i=0;i<=this.dimensionX-1;i++){// incluimos la ultima casilla por que enn este caso es igual que las demas
+    for (int i=0;i<this.dimensionX;i++){// incluimos la ultima casilla por que en este caso es igual que las demas
         m=String.valueOf(i);
         //fila=fila+String.format("%1$" + n, (int)i);
         //fila=fila+String.format("%1$" + n, m);
@@ -218,17 +223,18 @@ public static String padLeft(String s, int n) {
         }
     }
     public void colocaEnDestino(casilla origen,casilla destino,boolean hayCaza){
-        if (hayCaza){//no muevo el tiburon y se come al pez
-            
-            this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
-          
-            
-        }else{
+        
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
             this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
             this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+        
+        if (hayCaza){//no muevo el tiburon y se come al pez
+            if (this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).isActualizado()==false){//ha pasado un ciclo completo con pez y tiburon en casilla
+                this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
+                this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+            }
+            
         }
     }
     
@@ -323,208 +329,387 @@ public static String padLeft(String s, int n) {
         int y=origen.getPosicionY();
         if(estaEnBorde(origen)){
             //estan mal las posiciones del los bordes                     
-            if((x==0)&&(y==0)){//esquina NO
+            if((x==0)&&(y==0)){//esquina SO
                 switch (rumbo) {
-                    case 0://se mueve al norte y sale al sur
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y=this.dimensionY-1;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                      
+                     case 0://N  
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 1://se mueve al NE y sale al sur con deriva este
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y=this.dimensionY-1;
-                        x++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                      
+                 case 1://NE
+                     testeaCasillaOrigen(x,y,test,rumbo);
+                    x++;
+                    y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 2://se mueve al este
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x++;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 2://E
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 3://se mueve al SE
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x++;
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 3://SE  se sale y aparece en borde norte con deriva este
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x++;
+                    y=this.dimensionY-1;
+                    //y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 4://se mueve al Sur
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 4://S se sale y aparece en esquina NO
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    //y--;
+                    y=this.dimensionY-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+                case 5://SO se sale y aparece en la esquina NE
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=this.dimensionX-1;
+                    y=this.dimensionY-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 5://se mueve al SO y sale al Este con deriva sur
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                        
-                    break;
-                    case 6://se mueve al oeste y sale al este
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 7://se mueve al NO y sale por la esquina SE
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        y=this.dimensionY-1;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
+                case 6://O se sale y aparece en la esquina SE 
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=this.dimensionX-1;
+                    y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+                case 7://NO se sale y aparece en borde este con deriva norte
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=this.dimensionX-1;
+                    y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+//                    case 0://se mueve al norte y sale al sur
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y=this.dimensionY-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                      
+//                    break;
+//                    case 1://se mueve al NE y sale al sur con deriva este
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y=this.dimensionY-1;
+//                        x++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                      
+//                    break;
+//                    case 2://se mueve al este
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 3://se mueve al SE
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x++;
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 4://se mueve al Sur
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 5://se mueve al SO y sale al Este con deriva sur
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                        
+//                    break;
+//                    case 6://se mueve al oeste y sale al este
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 7://se mueve al NO y sale por la esquina SE
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        y=this.dimensionY-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
                     default:
                         throw new AssertionError();
                 }
-            }else if((x==this.dimensionX-1)||(y==this.dimensionY-1)){//esquina SE
+            }else if((x==this.dimensionX-1)||(y==this.dimensionY-1)){//esquina NE
                 switch (rumbo) {
-                    case 0://se mueve N 
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y--;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                 case 0://N se sale y aparece en esquina SE
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 1://se mueve NE y sale al O con deriva N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=0;
-                        y--;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                 case 1://NE se sale y aparece en la esquina SO
+                     testeaCasillaOrigen(x,y,test,rumbo);
+                    x=0;
+                    y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 2://se mueve E y sale por el O
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 2://E se sale y aparece en la esquina NO
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 3://se mueve SE y sale por la esquina NO
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=0;
-                        y=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 3://SE se sale y aparece en borde O con deriva S
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=0;
+                    y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 4://se mueve S y sale por el N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
+                case 4://S
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+                case 5://SO
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x--;
+                    y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 5://se mueve SO y sale por el N con deriva O
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y=0;
-                        x--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 6://se mueve O
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 7://se mueve NO
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x--;
-                        y--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
+                case 6://O
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x--;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+                case 7://NO se sale y aparece en el S con deriva O
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x--;
+                    y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                break;
+//                    case 0://se mueve N 
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 1://se mueve NE y sale al O con deriva N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=0;
+//                        y--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 2://se mueve E y sale por el O
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 3://se mueve SE y sale por la esquina NO
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=0;
+//                        y=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 4://se mueve S y sale por el N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 5://se mueve SO y sale por el N con deriva O
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y=0;
+//                        x--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 6://se mueve O
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 7://se mueve NO
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x--;
+//                        y--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
                     
                     default:
                         throw new AssertionError();
                 }
             }
-            else if((x==0)&&(y==this.dimensionY-1)){//esquina SO
+            else if((x==0)&&(y==this.dimensionY-1)){//esquina NO
                     switch (rumbo) {
-                    case 0://se mueve al N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 1://se mueve al NE
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y--;
-                        x++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 2://se mueve al E
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 3://se mueve al SE y sale al N con deriva E
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                         y=0;
-                         x++;
-                         testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 4://se mueve al S y sale al N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 5://se mueve al SO y sale en la esquina NE
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        y=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 6://se mueve al O y sale al E
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 7://se mueve al NO y sale al E con deriva N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
-                        y--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
+                         case 0://N se sale y aparece en esquina SO
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            y=0;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                            break;
+                         case 1://NE se sale y aparece en borde S con deriva E
+                             testeaCasillaOrigen(x,y,test,rumbo);
+                            x++;
+                            y=0;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                            break;
+                        case 2://E 
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            x++;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                            break;
+                        case 3://SE
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            x++;
+                            y--;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                            break;
+                        case 4://S
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            y--;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                        case 5://SO se sale y aparece en borde E y con deriva S
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            x=this.dimensionX-1;
+                            y--;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                            break;
+                        case 6://O se sale y aparece en Esquina NE
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            x=this.dimensionX-1;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                        case 7://NO se sale y aparece en esquina SE
+                            testeaCasillaOrigen(x,y,test,rumbo);
+                            x=this.dimensionX-1;
+                            y=0;
+                            testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+//                    case 0://mueve al N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 1://se mueve al NE
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y--;
+//                        x++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 2://se mueve al E
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 3://se mueve al SE y sale al N con deriva E
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                         y=0;
+//                         x++;
+//                         testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 4://se mueve al S y sale al N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 5://se mueve al SO y sale en la esquina NE
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        y=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 6://se mueve al O y sale al E
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 7://se mueve al NO y sale al E con deriva N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        y--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
                     
                     default:
                         throw new AssertionError();
                 }
             }
-            else if ((y==0)&&(x==this.dimensionX-1)){//esquina NE
+            else if ((y==0)&&(x==this.dimensionX-1)){//esquina SE
                 switch (rumbo) {
-                    case 0://se mueve al N y sale por la esquina SE
+                     case 0://N
                         testeaCasillaOrigen(x,y,test,rumbo);
-                        x=this.dimensionX-1;
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                     case 1://NE se sale y aparece en borde O con deriva Norte
+                         testeaCasillaOrigen(x,y,test,rumbo);
+                        x=0;
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 2://E se sale y aparece en Esquina SO
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 3://SE se sale y aparece en Esquina NO
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x=0;
+                        y=this.dimensionY-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 4://S se sale y aparece en Esquina NE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=this.dimensionY-1;
                         testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                    case 1://se mueve al NE y se  poe la esquina SO
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                         x=0;
-                         y=this.dimensionY;
-                         testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 2://se mueve al E y salgo por la esquina NO
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=0;
-                        y=0;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 3://se mueve al SE sale al Oeste con deriva S
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x=0;
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 4://se mueve al S
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 5://se mueve al SO
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x--;
-                        y++;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 6://se mueve al O
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                        x--;
-                        testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                    case 7://se mueve al NO y sale por el Sur con deriva O
+                    case 5://SO se sale y aparece en borde N con deriva O
                         testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
                         y=this.dimensionY-1;
                         testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 6://O
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
+                    case 7://NO
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x--;
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                    break;
+//                    case 0://se mueve al N y sale por la esquina SE
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=this.dimensionX-1;
+//                        y=this.dimensionY-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 1://se mueve al NE y se  poe la esquina SO
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                         x=0;
+//                         y=this.dimensionY;
+//                         testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 2://se mueve al E y salgo por la esquina NO
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=0;
+//                        y=0;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 3://se mueve al SE sale al Oeste con deriva S
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x=0;
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 4://se mueve al S
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 5://se mueve al SO
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x--;
+//                        y++;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 6://se mueve al O
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x--;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                    case 7://se mueve al NO y sale por el Sur con deriva O
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                        x--;
+//                        y=this.dimensionY-1;
+//                        testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
                     
                     default:
                         throw new AssertionError();
@@ -534,64 +719,108 @@ public static String padLeft(String s, int n) {
                 switch (rumbo) {
                     case 0://N
                         testeaCasillaOrigen(x,y,test,rumbo);
-                    y--;
-                    testeaCasillaDestino(x,y,test,rumbo);
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                     case 1://NE
+                         testeaCasillaOrigen(x,y,test,rumbo);
+                        x++;
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 2://E
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 3://SE
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x++;
+                        y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 4://S
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                 case 1://NE
-                     testeaCasillaOrigen(x,y,test,rumbo);
-                    x++;
-                    y--;
-                    testeaCasillaDestino(x,y,test,rumbo);
+                    case 5://SO se sale y aparece en borde E con deriva S
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x=this.dimensionX-1;
+                        y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        break;
+                    case 6://O se sale y aparece en borde E
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x=this.dimensionX-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 2://E
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    x++;
-                    testeaCasillaDestino(x,y,test,rumbo);
+                    case 7://NO se sale y aparece en borde E con deriva N
+                        testeaCasillaOrigen(x,y,test,rumbo);
+                        x=this.dimensionX-1;
+                        y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 3://SE
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    x++;
-                    y++;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                case 4://S
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    y++;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                break;
-                case 5://SO y sale al E con deriva S
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    x=this.dimensionX-1;
-                    y++;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                case 6://O y sale al E
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    x=this.dimensionX-1;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                break;
-                case 7://NO y sale al E con deriva N
-                    testeaCasillaOrigen(x,y,test,rumbo);
-                    x=this.dimensionX-1;
-                    y--;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                break;
+//                    case 0://N
+//                        testeaCasillaOrigen(x,y,test,rumbo);
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                 case 1://NE
+//                     testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 2://E
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 3://SE
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 4://S
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 5://SO y sale al E con deriva S
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=this.dimensionX-1;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 6://O y sale al E
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=this.dimensionX-1;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 7://NO y sale al E con deriva N
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=this.dimensionX-1;
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
                     
                     default:
                         throw new AssertionError();
                 }
             
-            }else if(y==0){//borde Norte
+            }else if(y==0){//borde Sur
                 switch (rumbo) {
-                     case 0://N y sale por el S
-                         testeaCasillaOrigen(x,y,test,rumbo);
-                    y=this.dimensionY-1;
+                    case 0://N
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                 case 1://NE y sale por el S con deriva E
+                 case 1://NE
                      testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y=this.dimensionY-1;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
@@ -599,21 +828,21 @@ public static String padLeft(String s, int n) {
                     x++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 3://SE
+                case 3://SE se sale y aparece en borde Norte con deriva E
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y++;
+                    y=this.dimensionY-1;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 4://S
+                case 4://S se sale y aparece en borde Norte
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y++;
+                    y=this.dimensionY-1;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
-                case 5://SO
+                case 5://SO se sale y aparece en borde N con deriva O
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y++;
+                    y=this.dimensionY-1;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
@@ -621,49 +850,93 @@ public static String padLeft(String s, int n) {
                     x--;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
-                case 7://NO y sale por el S con deriva O
+                case 7://NO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y=this.dimensionY-1;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
+//                     case 0://N y sale por el S
+//                         testeaCasillaOrigen(x,y,test,rumbo);
+//                    y=this.dimensionY-1;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                 case 1://NE y sale por el S con deriva E
+//                     testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    y=this.dimensionY-1;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 2://E
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 3://SE
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x++;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 4://S
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 5://SO
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 6://O
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 7://NO y sale por el S con deriva O
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    y=this.dimensionY-1;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
                     default:
                         throw new AssertionError();
                 }
                 
             }else if (x==this.dimensionX-1){//borde Este
                 switch (rumbo) {
-                 case 0://N
-                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y--;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                 case 1://NE y sale al O con deriva N
-                     testeaCasillaOrigen(x,y,test,rumbo);
-                    x=0;
-                    y--;
-                    testeaCasillaDestino(x,y,test,rumbo);
-                    break;
-                case 2://E y sale al O
+                     case 0://N
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    x=0;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 3://SE y sale al O con deriva S
-                    testeaCasillaOrigen(x,y,test,rumbo);
+                 case 1://NE se sale y aparece en borde O con deriva N
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x=0;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                    break;
+                case 2://E se sale y aparece en borde O
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
+                    break;
+                case 3://SE se sale y aparece en borde O con deriva S
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    x=0;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y++;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y++;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
@@ -674,24 +947,67 @@ public static String padLeft(String s, int n) {
                 case 7://NO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y--;
+                    y++;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
+//                 case 0://N
+//                     testeaCasillaOrigen(x,y,test,rumbo);
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                 case 1://NE y sale al O con deriva N
+//                     testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=0;
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 2://E y sale al O
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=0;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 3://SE y sale al O con deriva S
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x=0;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 4://S
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 5://SO
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    y++;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                    break;
+//                case 6://O
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
+//                case 7://NO
+//                    testeaCasillaOrigen(x,y,test,rumbo);
+//                    x--;
+//                    y--;
+//                    testeaCasillaDestino(x,y,test,rumbo);
+//                break;
                     default:
                         throw new AssertionError();
                 }
-            }else{//y==this.dimensionY //borde Sur
+            }else{//x=0 //borde Norte
                 switch (rumbo) {
-                    
-                    case 0://N
-                        testeaCasillaOrigen(x,y,test,rumbo);
-                    y--;
+                 case 0://N se sale y aparece en borde S
+                    testeaCasillaOrigen(x,y,test,rumbo);
+                    y=0;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                 case 1://NE
+                 case 1://NE se sale y aparece en borde S con deriva E
                      testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y--;
+                    y=0;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
@@ -699,21 +1015,21 @@ public static String padLeft(String s, int n) {
                     x++;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 3://SE y sale por el N con deriva E
+                case 3://SE
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
-                    y=0;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
-                case 4://S y sale por el N
+                case 4://S
                     testeaCasillaOrigen(x,y,test,rumbo);
-                    y=0;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
-                case 5://SO y sale por el N con deriva O
+                case 5://SO
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y=0;
+                    y--;
                     testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
@@ -721,10 +1037,10 @@ public static String padLeft(String s, int n) {
                     x--;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
-                case 7://NO
+                case 7://NO se sale y aparece en borde S con deriva O
                     testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
-                    y--;
+                    y=0;
                     testeaCasillaDestino(x,y,test,rumbo);
                 break;
                     default:

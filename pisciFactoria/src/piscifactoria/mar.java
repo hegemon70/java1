@@ -112,7 +112,7 @@ public class mar {
    }
    
    public String [] pintaMar(boolean test){
-        String [] marPintado = new String [this.dimY];
+        String [] marPintado = new String [this.dimY+1];
         //int c = 0;
         if (this.numNiv > 1) {
             marPintado[0]="demasiados niveles, beta solo un nivel";    
@@ -155,9 +155,9 @@ public class mar {
         return mcd;
     }
    
-public void pueblaMar(){
-   creaPeces();
-   creaTiburones(false);
+public void pueblaMar(boolean test){
+   creaPeces(test);
+   creaTiburones(test);
    
 }
 
@@ -224,8 +224,8 @@ public void pongoEnMar(casilla cas){
         nivelAct=(nivel) this.vNiveles.get(cas.getNivel());
         nivelAct.ponEnNivel(cas);
 }
-public void creaPeces(){
-    
+public void creaPeces(boolean test){
+    String avisoPeces="creado pez:";
    int numPeces=dameNumPeces();
    do{
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
@@ -234,9 +234,16 @@ public void creaPeces(){
            Pez pezActual=new Pez();//creo pez
             pezActual.nace(cuna);//le indico donde esta
             pongoEnMar(cuna);//lo pongo en el mar
+           
            incrementaContadorPeces();
             numPeces--;
+             if (test) {
+                System.out.print(String.format("%15s",avisoPeces)+String.format("%3d", numPeces));
+                System.out.print(" en:"+String.format("%3d",cuna.getPosicionX()));
+                System.out.println("|"+String.format("%3d",cuna.getPosicionY()));
+           }
        }
+       
       
    }while (numPeces >0);
 
@@ -247,8 +254,12 @@ public void creaTiburones(boolean test){
 do{
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
        if (esCasillaVacia(cuna)) {//si esta vacia
-           if (test)
-           System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
+           if (test){
+                //System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
+                System.out.print("creado tiburon:"+String.format("%3d", numTiburones));
+                System.out.print(" en:"+String.format("%3d",cuna.getPosicionX()));
+                System.out.println("|"+String.format("%3d",cuna.getPosicionY()));
+           }
             cuna.setHayTiburon(true);
            Tiburon TibActual=new Tiburon();//creo Tiburon
             TibActual.nace(cuna);//le indico donde esta

@@ -145,9 +145,9 @@ public class casilla {
             else if(x==tamX-1 && y==0){//casilla del inferior derecha
                 trazo="__|/";
             }
-            else if((x==tamX-1) && (y!=tamY)){ //casillas del lateral derecho
+            else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                 trazo="__/|/";
-            }else if ((x==tamX-1)&& y==tamY){ //casilla superior derecha
+            }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
                 trazo="__/|";
             }else trazo="__/";
        }
