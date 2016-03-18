@@ -67,8 +67,8 @@ public class nivel {
            }
        }
    }
-   public String [] pintaNivel(){
-      String [] dibNivel =new String[this.dimensionY+2];//creo un array de string del tamñano de tamY+2 para devolverc con tapa sup e inf
+   public String [] pintaNivel(boolean test){
+      String [] dibNivel =new String[this.dimensionY+3];//creo un array de string del tamñano de tamY+3 para devolverc con tapa sup e inf y linea testeo
       String fila,shift,tapaSup,shiftT;
       int contaShift,contFila;
       fila="";
@@ -99,13 +99,21 @@ public class nivel {
         contFila++;//indice de fila
         fila=shiftT+fila;//añado el desplazamiento a la fila
         for (int x=0; x<=this.dimensionX-1;x++){//bucle de casillas
-            fila=fila+this.casillero1.get(y).get(x).pintaCasilla(x, y,this.dimensionX,this.dimensionY, this.casillero1.get(y).get(x).isHayPez(), this.casillero1.get(y).get(x).isHayTiburon());
+            fila=fila+this.casillero1.get(y).get(x).pintaCasilla(x, y,this.dimensionX,this.dimensionY, this.casillero1.get(y).get(x).isHayPez(), this.casillero1.get(y).get(x).isHayTiburon(),test);
+        }
+        if (test){
+            fila=fila+String.format("%3d",y);
+            //fila=fila+String.format("%3d",(int)this.dimensionY-y);
         }
         dibNivel[contFila]=fila;//añado la fila completa
         fila="";
         
     }
      dibNivel[this.dimensionY+1]=PonPie(shiftT);
+     if (test){
+        dibNivel[this.dimensionY+2]=PonPieNumerico(shiftT);
+     }else
+         dibNivel[this.dimensionY+2]="";
    return dibNivel;
    }
    
@@ -149,6 +157,39 @@ public class nivel {
         
         return fila;
     }
+    public String PonPieNumerico(String shift){
+        String fila="";int n=3;
+        String m;
+    for (int i=0;i<=this.dimensionX-1;i++){// incluimos la ultima casilla por que enn este caso es igual que las demas
+        m=String.valueOf(i);
+        //fila=fila+String.format("%1$" + n, (int)i);
+        //fila=fila+String.format("%1$" + n, m);
+       fila=fila+String.format("%3d", i);
+         
+      }
+        fila=shift+fila;//el desplazamiento inicial
+       return fila;
+    }
+    
+    public static String padRight(String s, int n) {
+     return String.format("%1$-" + n + "s", s);  
+}
+
+public static String padLeft(String s, int n) {
+    return String.format("%1$" + n + "s", s);  
+}
+
+//...
+//
+//public static void main(String args[]) throws Exception {
+// System.out.println(padRight("Howto", 20) + "*");
+// System.out.println(padLeft("Howto", 20) + "*");
+//}
+///*
+//  output :
+//     Howto               *
+//                    Howto*
+//*/
     public void quitaMarcaActualizadoEnNivel(){
     //pre:
    //post:
@@ -161,7 +202,7 @@ public class nivel {
         
     }
     
-    public void mueveTiburonesEnNivel(){
+    public void mueveTiburonesEnNivel(boolean test){
         casilla cursor;
         for (int y = 0; y < this.dimensionY; y++) {
             for (int x = 0; x < this.dimensionX; x++) {
@@ -169,7 +210,7 @@ public class nivel {
                 if (! cursor.isActualizado()){//si no ha sido antes actualizado
                        if (cursor.isHayTiburon()) {//si hay tiburon
                         if(!cursor.isHayPez()){//si no hay caza
-                            decideMovimientoTiburonEnNivel(cursor);
+                            decideMovimientoTiburonEnNivel(cursor,test);
                         }
                     }
                 }
@@ -194,8 +235,8 @@ public class nivel {
     public boolean esCasillaVacia(casilla cas){
         return (!cas.isHayPez())&&(!cas.isHayTiburon());
     }
-    public void decideMovimientoTiburonEnNivel(casilla origen){
-        casilla destino=dameCasillaAleatoriaContigua(origen);
+    public void decideMovimientoTiburonEnNivel(casilla origen,boolean test){
+        casilla destino=dameCasillaAleatoriaContigua(origen,test);
         if(esCasillaVacia(destino)){
             colocaEnDestino(origen,destino,false);//no haycaza
         }
@@ -211,7 +252,7 @@ public class nivel {
        
     }
     
-    public casilla dameCasillaAleatoriaContigua(casilla origen){
+    public casilla dameCasillaAleatoriaContigua(casilla origen,boolean test){
     double rand;
     casilla casDestino=new casilla();
     Random rnd =new Random();
@@ -219,13 +260,60 @@ public class nivel {
       //(int) (rnd.nextDouble() * cantidad_números_rango + término_inicial_rango)
       rand=rnd.nextDouble();
       rumbo=(int)(rnd.nextDouble() * 8 + 0);
-             casDestino=dameCasillaDestino(rumbo,origen,false);
+             casDestino=dameCasillaDestino(rumbo,origen,test);
       return casDestino;
 }
     public boolean estaEnBorde(casilla cas){
         return (cas.getPosicionX()==0)||(cas.getPosicionY()==0)||(cas.getPosicionX()==this.dimensionX-1)||(cas.getPosicionX()==this.dimensionY);
     }
-    public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test ){
+    
+    public String dimeQueRumboEs(int numRumbo){
+        String rumbo="";
+        switch (numRumbo) {
+            case 0:
+                rumbo="N";                
+            break;
+             case 1:
+                rumbo="NE";
+            break;
+             case 2:
+                rumbo="E";
+            break;
+             case 3:
+                rumbo="SE";
+            break;
+             case 4:
+                rumbo="S";
+            break;
+             case 5:
+                rumbo="SO";
+            break;
+             case 6:
+                rumbo="O";
+            break;
+             case 7:
+                rumbo="NO";
+            break;
+            
+            default:
+                throw new AssertionError();
+        }
+        return rumbo;
+    }
+    public void testeaCasillaOrigen(int x,int y, boolean test,int rumbo){
+        if(test){
+        String dir="se mueve al ";
+                dir=dimeQueRumboEs(rumbo);
+                System.out.print("origen"+" [X:"+x+" Y:"+y+"]#"+dir);
+        }
+    }
+    public void testeaCasillaDestino(int x,int y, boolean test,int rumbo){
+	  if (test){
+                            System.out.println(" destino"+" [X:"+x+" Y:"+y+"]"); 
+                        }
+	
+	}
+     public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test ){
         casilla casDestino=new casilla();
         int x=origen.getPosicionX();
         int y=origen.getPosicionY();
@@ -234,32 +322,51 @@ public class nivel {
             if((x==0)&&(y==0)){//esquina NO
                 switch (rumbo) {
                     case 0://se mueve al norte y sale al sur
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=this.dimensionY-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                      
                     break;
                     case 1://se mueve al NE y sale al sur con deriva este
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=this.dimensionY-1;
                         x++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                      
                     break;
                     case 2://se mueve al este
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 3://se mueve al SE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x++;
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 4://se mueve al Sur
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 5://se mueve al SO y sale al Este con deriva sur
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
+                        
                     break;
                     case 6://se mueve al oeste y sale al este
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 7://se mueve al NO y sale por la esquina SE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
                         y=this.dimensionY-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     default:
                         throw new AssertionError();
@@ -267,32 +374,48 @@ public class nivel {
             }else if((x==this.dimensionX-1)||(y==this.dimensionY-1)){//esquina SE
                 switch (rumbo) {
                     case 0://se mueve N 
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 1://se mueve NE y sale al O con deriva N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=0;
                         y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 2://se mueve E y sale por el O
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 3://se mueve SE y sale por la esquina NO
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=0;
                         y=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 4://se mueve S y sale por el N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 5://se mueve SO y sale por el N con deriva O
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=0;
                         x--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 6://se mueve O
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 7://se mueve NO
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
                         y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     
                     default:
@@ -302,32 +425,48 @@ public class nivel {
             else if((x==0)&&(y==this.dimensionY-1)){//esquina SO
                     switch (rumbo) {
                     case 0://se mueve al N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 1://se mueve al NE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y--;
                         x++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 2://se mueve al E
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 3://se mueve al SE y sale al N con deriva E
+                        testeaCasillaOrigen(x,y,test,rumbo);
                          y=0;
                          x++;
+                         testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 4://se mueve al S y sale al N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 5://se mueve al SO y sale en la esquina NE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
                         y=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 6://se mueve al O y sale al E
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 7://se mueve al NO y sale al E con deriva N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
                         y--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     
                     default:
@@ -337,34 +476,50 @@ public class nivel {
             else if ((y==0)&&(x==this.dimensionX-1)){//esquina NE
                 switch (rumbo) {
                     case 0://se mueve al N y sale por la esquina SE
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=this.dimensionX-1;
                         y=this.dimensionY-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 1://se mueve al NE y se  poe la esquina SO
+                        testeaCasillaOrigen(x,y,test,rumbo);
                          x=0;
                          y=this.dimensionY;
+                         testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 2://se mueve al E y salgo por la esquina NO
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=0;
                         y=0;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 3://se mueve al SE sale al Oeste con deriva S
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x=0;
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 4://se mueve al S
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 5://se mueve al SO
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
                         y++;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 6://se mueve al O
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     case 7://se mueve al NO y sale por el Sur con deriva O
+                        testeaCasillaOrigen(x,y,test,rumbo);
                         x--;
                         y=this.dimensionY-1;
+                        testeaCasillaDestino(x,y,test,rumbo);
                     break;
                     
                     default:
@@ -374,32 +529,48 @@ public class nivel {
             else if(x==0){//borde Oeste
                 switch (rumbo) {
                     case 0://N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 3://SE
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO y sale al E con deriva S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x=this.dimensionX-1;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O y sale al E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x=this.dimensionX-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 7://NO y sale al E con deriva N
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x=this.dimensionX-1;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                     
                     default:
@@ -409,32 +580,48 @@ public class nivel {
             }else if(y==0){//borde Norte
                 switch (rumbo) {
                      case 0://N y sale por el S
+                         testeaCasillaOrigen(x,y,test,rumbo);
                     y=this.dimensionY-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE y sale por el S con deriva E
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y=this.dimensionY-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 3://SE
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 7://NO y sale por el S con deriva O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y=this.dimensionY-1;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                     default:
                         throw new AssertionError();
@@ -442,66 +629,99 @@ public class nivel {
                 
             }else if (x==this.dimensionX-1){//borde Este
                 switch (rumbo) {
-                    case 0://N
+                 case 0://N
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE y sale al O con deriva N
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x=0;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E y sale al O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 3://SE y sale al O con deriva S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x=0;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 7://NO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                     default:
                         throw new AssertionError();
                 }
             }else{//y==this.dimensionY //borde Sur
                 switch (rumbo) {
+                    
                     case 0://N
+                        testeaCasillaOrigen(x,y,test,rumbo);
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 3://SE y sale por el N con deriva E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S y sale por el N
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO y sale por el N con deriva O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y=0;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 7://NO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                     default:
                         throw new AssertionError();
@@ -511,38 +731,58 @@ public class nivel {
         }else{//no esta al borde
             switch (rumbo) {
                 case 0://N
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                  case 1://NE
+                     testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 2://E
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 3://SE
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x++;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 4://S
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 5://SO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y++;
+                    testeaCasillaDestino(x,y,test,rumbo);
                     break;
                 case 6://O
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 case 7://NO
+                    testeaCasillaOrigen(x,y,test,rumbo);
                     x--;
                     y--;
+                    testeaCasillaDestino(x,y,test,rumbo);
                 break;
                 default:
                     throw new AssertionError();
             }
     }
+        try{
         casDestino=this.casillero1.get(y).get(x);
+        }catch (Exception e){
+            System.out.println(""+ e.getMessage()+"en dameCasillaDestino" +" valor de X:" + x +" Y:" + y+" y el ultimo rumbo es: " );
+        }
     return casDestino;
     }
 }

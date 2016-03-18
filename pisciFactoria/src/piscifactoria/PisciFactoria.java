@@ -101,16 +101,16 @@ public class PisciFactoria {
        
     return false;
     }
-            public static void refrescaPantalla(mar Oceano){
-                aclara(5);
+            public static void refrescaPantalla(mar Oceano,boolean test){
+                aclara(2);//antes era 5
                      for (String cursor:  Oceano.pintaMarcador() ){
                         System.out.println(cursor);
                     }
-                     aclara(2);
-                    for (String cursor:  Oceano.pintaMar() ){
+                     aclara(0);//antes era 2
+                    for (String cursor:  Oceano.pintaMar(test) ){
                         System.out.println(cursor);
                     }
-                    aclara(5);
+                    aclara(2);//antes era 5
             
             }
      public static int pideDatoNumericoConDefault(String peticion,String peticionSiFallo,String vDefecto,String avisoXDefect){
@@ -162,7 +162,10 @@ public class PisciFactoria {
         System.out.println("vamos a crear una pecera");
         if (!AnyKeyToCancel_EnterToContinue("pulsa enter para valores por defecto o cualquier otra tecla para  ajustarlos manualmente")){
     
-        
+        if (!AnyKeyToCancel_EnterToContinue("pulsa enter para continuar sin testeo o cualquier otra tecla para que salgan mensajes de testeo"))
+        {
+            test=true;
+        }
                     //nNiveles=pideDatoNumerico("dime el numero de Niveles","dame un numero valido de niveles");
                 nNiveles=pideDatoNumericoConDefault("dime el numero de Niveles [1]","dame un numero valido de niveles","1","1 nivel elegido ...");
                 //tamX=pideDatoNumerico("dime el X del nivel","dame un X valido");
@@ -175,8 +178,8 @@ public class PisciFactoria {
                 breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
                 feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
                 porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces[2]","dame un numero valido","2","2% elegido");
-                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario","dame un numero valido","255","255 refrescos de pantalla elegido");
-                tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos","dame un numero valido","4","4 segundos elegido");
+                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario[255]","dame un numero valido","255","255 refrescos de pantalla elegido");
+                tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos[4]","dame un numero valido","4","4 segundos elegido");
         }
         
         //pideEnter("dame un enter para continuar");
@@ -188,13 +191,13 @@ public class PisciFactoria {
                     aclara(1);
                     mar Oceano = new mar(nNiveles,tamX,tamY,maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
                     Oceano.pueblaMar();
-                    refrescaPantalla(Oceano);
+                    refrescaPantalla(Oceano,test);
                     //int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT
                   while((int)Oceano.vContadores.get(9)>0){
                        Thread.sleep(tamChrono*1000);
                
-                     Oceano.resuelveEscenario();
-                     refrescaPantalla(Oceano);
+                     Oceano.resuelveEscenario(test);
+                     refrescaPantalla(Oceano,test);
                
                   }
                           

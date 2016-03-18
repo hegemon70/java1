@@ -80,16 +80,19 @@ public class casilla {
     
     
     
-    public String pintaCasilla(int x,int y,int tamX, int tamY,boolean P,boolean T){
+    public String pintaCasilla(int x,int y,int tamX, int tamY,boolean P,boolean T,boolean test){
       
-//        String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
+  //String tib=console.getStringInColor(console.ANSI_PURPLE,"T");  
 //        String pez=console.getStringInColor(console.ANSI_GREEN,"P");
 //        String ira=console.getStringInColor(console.ANSI_RED,"X");
 //        String cas=console.getStringInColor(console.ANSI_RESET,"");
+//        String cas=console.getStringInColor(console.ANSI_BLUE,"");
+        
         String tib="T"; 
         String pez="P";
         String ira="X";
         String cas="";
+        if (test){tib=console.getStringInColor(console.ANSI_PURPLE,"T");}
         
         String trazo=cas+"";
        if (T||P){ //HAY BICHO
@@ -119,16 +122,16 @@ public class casilla {
                 }else trazo="_"+tib+"/";
            }else{//hay pez
                 if(x==0 ){//casillas del lateral izquierdo
-                trazo="/_"+pez+"/";
+                trazo="/"+pez+"_/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_|"+pez+"/";
+                    trazo="_"+pez+"|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
-                    trazo="_/"+pez+"|/";
+                    trazo="_"+pez+"/|/";
                 }else if ((x==tamX-1)&& y==tamY-1){ //casilla superior derecha
-                    trazo="_/"+pez+"|";
-                }else trazo="_/"+pez+"";
+                    trazo="_"+pez+"/|";
+                }else trazo="_"+pez+"/";
 
            }
            

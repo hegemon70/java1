@@ -52,19 +52,22 @@ public class mar {
         
    }
    public void actualizaContadores(){
-       nivel cursor;
-        int numTiburonesTodosNiveles,numPecesTodosNiveles;
-        numTiburonesTodosNiveles=0;
-        numPecesTodosNiveles=0;
-         for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
-                 cursor=(nivel) this.vNiveles.get(i);
-//                 nivelAct.mueveTiburonesEnNivel();
-                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + cursor.numTiburones;//sumamos los tiburones en cada nivel
-                 numPecesTodosNiveles=numPecesTodosNiveles+cursor.numPeces;//sumamos los peces en cada nivel
-                 this.vContadores.add(7,numTiburonesTodosNiveles);
-                 this.vContadores.add(8,numPecesTodosNiveles);
-                 
-        }
+       //ESTA PARTE CUANDO HAYA MAS NIVELES
+//       nivel cursor;
+//        int numTiburonesTodosNiveles,numPecesTodosNiveles;
+//        numTiburonesTodosNiveles=0;
+//        numPecesTodosNiveles=0;
+//         for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
+//                 cursor=(nivel) this.vNiveles.get(i);
+////                 nivelAct.mueveTiburonesEnNivel();
+//                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + cursor.numTiburones;//sumamos los tiburones en cada nivel
+//                 numPecesTodosNiveles=numPecesTodosNiveles+cursor.numPeces;//sumamos los peces en cada nivel
+//                 this.vContadores.add(7,numTiburonesTodosNiveles);
+//                 this.vContadores.add(8,numPecesTodosNiveles);
+//                 
+//        }
+       
+       
         
    }
    public String[] pintaMarcador(){
@@ -108,7 +111,7 @@ public class mar {
        
    }
    
-   public String [] pintaMar(){
+   public String [] pintaMar(boolean test){
         String [] marPintado = new String [this.dimY];
         //int c = 0;
         if (this.numNiv > 1) {
@@ -116,7 +119,7 @@ public class mar {
        }else{
            nivel cursor; 
            cursor=(nivel)this.vNiveles.get(0);
-           marPintado= cursor.pintaNivel();
+           marPintado= cursor.pintaNivel(test);
             //for(String cursor: this.vNiveles.iterator().hasNext())
 //            for(int i=0; i<= numNiv;i++)
 //            {
@@ -174,7 +177,8 @@ public void decrementaContadorGenerico(int i){
      Integer c;
      c=(Integer)this.vContadores.get(i);
            c--;
-           this.vContadores.add(i,c);
+           this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
+           this.vContadores.add(i,c);//inserto el nuevo valor en la pasicion indicada por i
 }
  
 public void incrementaContadorGenerico(int i){
@@ -190,38 +194,29 @@ public void incrementaContadorGenerico(int i){
 //         //pos 8 peces vivos
 //         duracionEscenario //pos 9 duracion Escenario
 //         tamChrono //pos 10 espera del refresco en segundos
+
+    
      Integer c;
      c=(Integer)this.vContadores.get(i);
            c++;
-           this.vContadores.add(i,c);
+           this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
+           this.vContadores.add(i,c);//inserto el nuevo valor en la pasicion indicada por i
  }
 
  public void incrementaContadorPeces(){
-     Integer c;
-     c=(Integer)this.vContadores.get(7);
-           c++;
-           this.vContadores.add(7,c);
+     incrementaContadorGenerico(8);
  }
  
 public void decrementaContadorPeces(){
-     Integer c;
-     c=(Integer)this.vContadores.get(8);
-           c--;
-           this.vContadores.add(8,c);
+     decrementaContadorGenerico(8);
  
  }
  public void incrementaContadorTiburones(){
-     Integer c;
-     c=(Integer)this.vContadores.get(7);
-           c++;
-           this.vContadores.add(7,c);
+     incrementaContadorGenerico(7);
  }
 
 public void decrementaContadorTiburones(){
-     Integer c;
-     c=(Integer)this.vContadores.get(8);
-           c--;
-           this.vContadores.add(8,c);
+     decrementaContadorGenerico(7);
  
  }
 public void pongoEnMar(casilla cas){
@@ -327,17 +322,17 @@ public casilla dameCasillaAleatoria(){
    
     }   
     
-    public void resuelveEscenario() throws InterruptedException{
+    public void resuelveEscenario(boolean test) throws InterruptedException{
             decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
             quitaMarcaActualizado();
             //resuelveCaza()
-            mueveTiburones();
+            mueveTiburones(test);
             //muevePeces()
             actualizaContadores();
             
     }
     
-    public void mueveTiburones(){
+    public void mueveTiburones(boolean test){
    //pre:
    //post: 
         nivel nivelAct;
@@ -345,7 +340,7 @@ public casilla dameCasillaAleatoria(){
 //        numTiburonesTodosNiveles=0;
         for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
                  nivelAct=(nivel) this.vNiveles.get(i);
-                 nivelAct.mueveTiburonesEnNivel();
+                 nivelAct.mueveTiburonesEnNivel(test);
 //                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + nivelAct.numTiburones;//sumamos los tiburones en cada nivel
         }
         
