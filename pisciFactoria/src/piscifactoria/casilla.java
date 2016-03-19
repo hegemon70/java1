@@ -101,7 +101,8 @@ public class casilla {
                 trazo="/_"+ira+"/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_"+ira+"|/";
+                   // trazo="_"+ira+"|/";
+                    trazo="_"+ira+"/|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_"+ira+"/|/";
@@ -113,7 +114,8 @@ public class casilla {
                 trazo="/_"+tib+"/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_"+tib+"|/";
+                   // trazo="_"+tib+"|/";
+                    trazo="_"+tib+"/|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_"+tib+"/|/";
@@ -125,7 +127,8 @@ public class casilla {
                 trazo="/"+pez+"_/";
                 }
                 else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                    trazo="_"+pez+"|/";
+                   // trazo="_"+pez+"|/";
+                    trazo="_"+pez+"/|/";
                 }
                 else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                     trazo="_"+pez+"/|/";
@@ -143,7 +146,8 @@ public class casilla {
                 trazo="/__/";
             }
             else if(x==tamX-1 && y==0){//casilla del inferior derecha
-                trazo="__|/";
+                //trazo="__|/";
+                 trazo="__/|/";
             }
             else if((x==tamX-1) && (y!=tamY-1)){ //casillas del lateral derecho
                 trazo="__/|/";

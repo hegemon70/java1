@@ -41,7 +41,8 @@ public class nivel {
            
            System.out.println(""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+"" );
            //System.exit(indexX);
-       };
+       }
+       
        if (cas.isHayPez()) {//si es pez incremento el contado de peces en el nivel
            this.numPeces++;
        }
@@ -114,11 +115,12 @@ public class nivel {
         fila="";
         
     }
-     dibNivel[this.dimensionY]=PonPie(shiftT);
+     dibNivel[this.dimensionY+1]=PonPie(shiftT);
+     //dibNivel[this.dimensionY]=PonPie(shiftT); //pisa la ultima fila la Y=0
      if (test){
-        dibNivel[this.dimensionY+1]=PonPieNumerico(shiftT);
+        dibNivel[this.dimensionY+2]=PonPieNumerico(shiftT);
      }else
-         dibNivel[this.dimensionY+1]="";
+         dibNivel[this.dimensionY+2]="";
    return dibNivel;
    }
    
@@ -222,7 +224,7 @@ public static String padLeft(String s, int n) {
             }
         }
     }
-    public void colocaEnDestino(casilla origen,casilla destino,boolean hayCaza){
+    public void colocaEnDestinoT(casilla origen,casilla destino,boolean hayCaza){
         
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
             this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
@@ -244,7 +246,7 @@ public static String padLeft(String s, int n) {
     public void decideMovimientoTiburonEnNivel(casilla origen,boolean test){
         casilla destino=dameCasillaAleatoriaContigua(origen,test);
         if(esCasillaVacia(destino)){
-            colocaEnDestino(origen,destino,false);//no haycaza
+            colocaEnDestinoT(origen,destino,false);//no haycaza
         }
         else{//hay bicho
             if (destino.isHayPez()) {//movemos y tiburon come
