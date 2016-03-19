@@ -250,7 +250,7 @@ public static String padLeft(String s, int n) {
         }
         else{//hay bicho
             if (destino.isHayPez()) {//movemos y tiburon come
-                colocaEnDestino(origen,destino,true);//haycaza
+                colocaEnDestinoT(origen,destino,true);//haycaza
             }//si es un tiburon no hacemos nada  
             
         }
