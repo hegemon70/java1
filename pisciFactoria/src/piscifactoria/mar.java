@@ -6,7 +6,6 @@
 package piscifactoria;
 //import piscifactoria.casilla;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -17,8 +16,8 @@ public class mar {
     public int dimX;
     public int dimY;
     public int numNiv;
-    public ArrayList vNiveles = new ArrayList <nivel>();
-    public ArrayList vContadores = new ArrayList <Integer>();
+    public ArrayList <nivel> vNiveles;
+    public ArrayList <Integer> vContadores; 
 //    public ArrayList vPeces = new ArrayList <Pez>();
 //    public ArrayList vTiburones =new ArrayList <Tiburon>();
     
@@ -28,17 +27,20 @@ public class mar {
     
    public mar(int numNiv, int tamX, int tamY,int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario, int tamChrono){
             this(numNiv,tamX,tamY);
-             creaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
+           
+            
+            creaContadores(maxBug,lifeSpanT,lifeSpanP,breedT,breedP,feedT,porcentajeT,duracionEscenario,tamChrono);
    
    }
    public mar(int numNiv, int tamX, int tamY){
         this.numNiv=numNiv;
         this.dimX=tamX;
         this.dimY=tamY;
+        this.vNiveles= new ArrayList();
+        this.vContadores=new ArrayList();
         creaNiveles();
        
    }
-   
    public void creaContadores(int maxBug,int lifeSpanT,int lifeSpanP,int breedT,int breedP,int feedT,int porcentajeT,int duracionEscenario,int tamChrono){
         this.vContadores.add(maxBug);//pos 0
         this.vContadores.add(lifeSpanT);//pos 1

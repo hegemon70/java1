@@ -16,6 +16,15 @@ public class casilla {
     private boolean hayPez;
     private boolean hayTiburon;
     private boolean actualizado;
+    private int indiceBicho;
+
+    public int getIndiceBicho() {
+        return indiceBicho;
+    }
+
+    public void setIndiceBicho(int indiceBicho) {
+        this.indiceBicho = indiceBicho;
+    }
 
     public boolean isActualizado() {
         return actualizado;
@@ -34,6 +43,7 @@ public class casilla {
         this.hayPez=false;
         this.hayTiburon=false;
         this.actualizado=false;
+        this.indiceBicho=-1;
         //this.nivel=nivel;
     }
 

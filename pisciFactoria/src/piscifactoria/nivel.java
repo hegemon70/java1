@@ -18,10 +18,10 @@ public class nivel {
    public int numPeces,numTiburones;
     //public int[][] vNivel = new int[dimensionX][dimensionY];
     //public ArrayList casillero = new ArrayList <casilla>();
-    public ArrayList<ArrayList<casilla>> casillero1 = new ArrayList<ArrayList<casilla>>();
+    public ArrayList<ArrayList<casilla>> casillero1;
     //public ArrayList vCazas =new ArrayList <casilla>();
-    public ArrayList vPeces =new ArrayList <Pez>();
-    public ArrayList vTiburones = new ArrayList <Tiburon>();
+    public ArrayList <Pez> vPeces;
+    public ArrayList <Tiburon> vTiburones; 
     //this.vPeces.add(pezActual);//lo añado al vector de peces
    
    nivel(){}
@@ -31,6 +31,9 @@ public class nivel {
         this.dimensionY=tamY;
         this.numPeces=0;
         this.numTiburones=0;
+        this.casillero1= new ArrayList();
+        this.vPeces = new ArrayList();
+        this.vTiburones = new ArrayList();
         creaColumnas();
         creaCasillas();
     }
@@ -47,11 +50,13 @@ public class nivel {
        }
        
        if (cas.isHayPez()) {//si es pez incremento el contado de peces en el nivel
-           this.vPeces.add(bicho);//lo añado al vector de peces
+           this.vPeces.add((Pez)bicho);//lo añado al vector de peces
+           cas.setIndiceBicho((this.vPeces.size()-1));//meto en casilla el indice de vPeces
            this.numPeces++;
        }
        if (cas.isHayTiburon()) {//si es tiburon incremento el contado de tiburones en el nivel
-           this.vTiburones.add(bicho);//lo añado al vector de tiburones
+           this.vTiburones.add((Tiburon)bicho);//lo añado al vector de tiburones
+           cas.setIndiceBicho((this.vTiburones.size()-1));//meto en casilla el indice de vTiburones
            this.numTiburones++;
        }
 
@@ -213,6 +218,9 @@ public static String padLeft(String s, int n) {
                 
         
     }
+    public int dameIndiceTiburon(casilla cas){
+        return cas.getIndiceBicho();
+    }
     public void devoraPez(casilla cas,boolean test){
         
     
@@ -237,9 +245,11 @@ public static String padLeft(String s, int n) {
         }
     }
     public void colocaEnDestinoT(casilla origen,casilla destino,boolean hayCaza){
-        
+        int indiceTib=dameIndiceTiburon(origen);
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIndiceBicho(-1);//quito el indice de bicho en la casilla
             this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIndiceBicho(indiceTib);//pongo el indice de  bicho en la casilla destino
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
             this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
         
