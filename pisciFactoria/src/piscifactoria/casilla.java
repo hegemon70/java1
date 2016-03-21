@@ -16,15 +16,26 @@ public class casilla {
     private boolean hayPez;
     private boolean hayTiburon;
     private boolean actualizado;
-    private int indiceBicho;
+    private String idBicho;
+    private String idBicho2;
 
-    public int getIndiceBicho() {
-        return indiceBicho;
+    public String getIdBicho() {
+        return idBicho;
     }
 
-    public void setIndiceBicho(int indiceBicho) {
-        this.indiceBicho = indiceBicho;
+    public void setIdBicho(String idBicho) {
+        this.idBicho = idBicho;
     }
+
+    public String getIdBicho2() {
+        return idBicho2;
+    }
+
+    public void setIdBicho2(String idBicho2) {
+        this.idBicho2 = idBicho2;
+    }
+
+
 
     public boolean isActualizado() {
         return actualizado;
@@ -43,7 +54,8 @@ public class casilla {
         this.hayPez=false;
         this.hayTiburon=false;
         this.actualizado=false;
-        this.indiceBicho=-1;
+        this.idBicho="";
+        this.idBicho="";
         //this.nivel=nivel;
     }
 

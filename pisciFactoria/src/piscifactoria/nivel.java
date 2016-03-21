@@ -20,8 +20,7 @@ public class nivel {
     //public ArrayList casillero = new ArrayList <casilla>();
     public ArrayList<ArrayList<casilla>> casillero1;
     //public ArrayList vCazas =new ArrayList <casilla>();
-    public ArrayList <Pez> vPeces;
-    public ArrayList <Tiburon> vTiburones; 
+   
     //this.vPeces.add(pezActual);//lo añado al vector de peces
    
    nivel(){}
@@ -32,8 +31,8 @@ public class nivel {
         this.numPeces=0;
         this.numTiburones=0;
         this.casillero1= new ArrayList();
-        this.vPeces = new ArrayList();
-        this.vTiburones = new ArrayList();
+//        this.vPeces = new ArrayList();
+//        this.vTiburones = new ArrayList();
         creaColumnas();
         creaCasillas();
     }
@@ -50,13 +49,15 @@ public class nivel {
        }
        
        if (cas.isHayPez()) {//si es pez incremento el contado de peces en el nivel
-           this.vPeces.add((Pez)bicho);//lo añado al vector de peces
-           cas.setIndiceBicho((this.vPeces.size()-1));//meto en casilla el indice de vPeces
+           this.casillero1.get(indexY).get(indexX).setIdBicho(bicho.getIdBicho());//pongo en la casilla el id del Pez
+           //this.vPeces.add((Pez)bicho);//lo añado al vector de peces
+           //cas.setIndiceBicho((this.vPeces.size()-1));//meto en casilla el indice de vPeces
            this.numPeces++;
        }
        if (cas.isHayTiburon()) {//si es tiburon incremento el contado de tiburones en el nivel
-           this.vTiburones.add((Tiburon)bicho);//lo añado al vector de tiburones
-           cas.setIndiceBicho((this.vTiburones.size()-1));//meto en casilla el indice de vTiburones
+           this.casillero1.get(indexY).get(indexX).setIdBicho(bicho.getIdBicho());//pongo en la casilla el id del
+           //this.vTiburones.add((Tiburon)bicho);//lo añado al vector de tiburones
+          // cas.setIndiceBicho((this.vTiburones.size()-1));//meto en casilla el indice de vTiburones
            this.numTiburones++;
        }
 
@@ -218,11 +219,21 @@ public static String padLeft(String s, int n) {
                 
         
     }
-    public int dameIndiceTiburon(casilla cas){
-        return cas.getIndiceBicho();
+    public String dameIdBicho(casilla cas){
+        return cas.getIdBicho();
     }
-    public void devoraPez(casilla cas,boolean test){
-        
+    public void devoraPezEnNivel(boolean test){
+        casilla cursor;
+        for (int y = 0; y < this.dimensionY; y++) {//recorre el casillero desde el NO
+            for (int x = 0; x < this.dimensionX; x++) {
+                cursor=this.casillero1.get(y).get(x);
+                if ((cursor.isHayTiburon())&&(cursor.isHayPez())){
+                    if(test){
+                        System.out.println("tiburon devora pez en :"+x+"|"+y);
+                    }
+                }
+            }
+        }
     
     }
     
@@ -231,56 +242,64 @@ public static String padLeft(String s, int n) {
         for (int y = 0; y < this.dimensionY; y++) {//recorre el casillero desde el NO
             for (int x = 0; x < this.dimensionX; x++) {
                 cursor=this.casillero1.get(y).get(x);
-                if (! cursor.isActualizado()){//si no ha sido antes actualizado
+              //  if (! cursor.isActualizado()){//si no ha sido antes actualizado
                        if (cursor.isHayTiburon()) {//si hay tiburon
+                           if(test){System.out.print("el tiburon "+cursor.getIdBicho()+" ");}
                         if(!cursor.isHayPez()){//si no hay caza
+                            
                             decideMovimientoTiburonEnNivel(cursor,test);
-                        }else //hay una pez pendiente de comer
-                            {
-                                devoraPez(cursor,test);
-                            }
+                        }
+//                        else //hay una pez pendiente de comer
+//                            {
+//                                devoraPez(cursor,test);
+//                            }
                     }
-                }
+               // }
             }
         }
     }
     public void colocaEnDestinoT(casilla origen,casilla destino,boolean hayCaza){
-        int indiceTib=dameIndiceTiburon(origen);
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIndiceBicho(-1);//quito el indice de bicho en la casilla
-            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIndiceBicho(indiceTib);//pongo el indice de  bicho en la casilla destino
-            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
-            this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+       
         
         if (hayCaza){//no muevo el tiburon y se come al pez
-            if (this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).isActualizado()==false){//ha pasado un ciclo completo con pez y tiburon en casilla
-                this.casillero1.get(destino.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
-                this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
-            }
-            
+//            if (this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).isActualizado()==false){//ha pasado un ciclo completo con pez y tiburon en casilla
+//                this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
+//                this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+//          
+            String idPez=dameIdBicho(destino);//cojo el incide del pez que esta en la casilla destino
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setIdBicho2(idPez);//paso el indice al iindiceBicho2
         }
+       // else{//muevo el tiburon
+             String idTib=dameIdBicho(origen);
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayTiburon(false);//quito el tiburon en el origen
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIdBicho("");//quito el indice de bicho en la casilla origen
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayTiburon(true);//pongo el tiburon en el destino
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setIdBicho(idTib);//pongo el indice de  bicho en la casilla destino
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setActualizado(true);//casilla actualizada
+       // }
     }
-    
+      public void decideMovimientoTiburonEnNivel(casilla origen,boolean test){
+        casilla destino=dameCasillaAleatoriaContigua(origen,test);
+        if(esCasillaVacia(destino)){
+            //if(test){System.out.print("el tiburon "+origen.getIdBicho()+"se mueve ");}
+            colocaEnDestinoT(origen,destino,false);//no haycaza
+             
+        }
+        else{//hay bicho
+            
+            if (destino.isHayPez()) {//movemos y tiburon come
+              //  if(test){System.out.print("el tiburon "+origen.getIdBicho()+"come en  ");}
+                colocaEnDestinoT(origen,destino,true);//haycaza
+            }//si es un tiburon no hacemos nada    
+        } 
+       
+    }
+      
     public boolean esCasillaVacia(casilla cas){
         return (!cas.isHayPez())&&(!cas.isHayTiburon());
     }
-    public void decideMovimientoTiburonEnNivel(casilla origen,boolean test){
-        casilla destino=dameCasillaAleatoriaContigua(origen,test);
-        if(esCasillaVacia(destino)){
-            colocaEnDestinoT(origen,destino,false);//no haycaza
-        }
-        else{//hay bicho
-            if (destino.isHayPez()) {//movemos y tiburon come
-                colocaEnDestinoT(origen,destino,true);//haycaza
-            }//si es un tiburon no hacemos nada  
-            
-        }
-            
-
-            
-       
-    }
+  
     
     public casilla dameCasillaAleatoriaContigua(casilla origen,boolean test){
     double rand;

@@ -8,11 +8,20 @@ public abstract class Acuatico implements serVivo {
     protected casilla posicion;
     protected boolean vivo;
     protected int profundidad;
+    protected String idBicho;
     
     
     Acuatico(){
     this.vivo=false;
     
+    }
+
+    public String getIdBicho() {
+        return idBicho;
+    }
+
+    public void setIdBicho(String idBicho) {
+        this.idBicho = idBicho;
     }
     
     
@@ -21,6 +30,12 @@ public abstract class Acuatico implements serVivo {
             this.profundidad=cuna.getNivel();
             this.posicion=cuna;
             this.vivo=true;
+    }
+    public void nace(casilla cuna,String id){
+            this.profundidad=cuna.getNivel();
+            this.posicion=cuna;
+            this.vivo=true;
+            this.idBicho=id;
     }
     
       

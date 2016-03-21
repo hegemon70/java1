@@ -112,6 +112,14 @@ public class PisciFactoria {
                     aclara(2);//antes era 5
             
             }
+            
+            public static void muestraSupervivientes(mar Oceano,boolean test){
+             aclara(1);
+                System.out.println("listado de supervivientes");
+                for (String cursor: Oceano.pintaSupervientes(test)) {
+                    System.out.println(cursor);
+                }
+            }
      public static int pideDatoNumericoConDefault(String peticion,String peticionSiFallo,String vDefecto,String avisoXDefect){
         //pre: peticion es el mensaje de la primera peticion, peticion si fallo las sucesivos mensajes de peticion         
         // el valor por defecto ha de ser el valor de un entero valido
@@ -179,6 +187,7 @@ public class PisciFactoria {
                 porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces[2]","dame un numero valido","2","2% elegido");
                 duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario[15]","dame un numero valido","15","15 refrescos de pantalla elegido");
                 tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos[4]","dame un numero valido","4","4 segundos elegido");
+                
         }
         
         //pideEnter("dame un enter para continuar");
@@ -199,6 +208,7 @@ public class PisciFactoria {
                      refrescaPantalla(Oceano,test);
                
                   }
+                  muestraSupervivientes(Oceano,test);
                           
         }else
             System.out.println("adios");
