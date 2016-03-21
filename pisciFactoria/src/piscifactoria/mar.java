@@ -19,6 +19,9 @@ public class mar {
     public int numNiv;
     public ArrayList vNiveles = new ArrayList <nivel>();
     public ArrayList vContadores = new ArrayList <Integer>();
+//    public ArrayList vPeces = new ArrayList <Pez>();
+//    public ArrayList vTiburones =new ArrayList <Tiburon>();
+    
     
     
    // public nivel [] vectorNiveles=new nivel[numNiv];
@@ -70,29 +73,42 @@ public class mar {
        
         
    }
+public static String padRight(String s, int n) {
+     return String.format("%1$-" + n + "s", s);  
+}
+
+public static String padLeft(String s, int n) {
+    return String.format("%1$" + n + "s", s);  
+}
    public String[] pintaMarcador(){
-       int resto,multiplicador,basePeces,baseTiburones,peces,tiburones,tasaDiv;
+//       int resto,multiplicador,basePeces,baseTiburones,peces,tiburones,tasaDiv;
+//       int formateadorI;
+//       String formateadorS1col="%40s";
             String [] contadorPintado =new String [5];
-            contadorPintado[0]="maximo Numero de animales: " + (int)this.vContadores.get(0);
-            contadorPintado[0]=contadorPintado[0]+"####Relacion peces Tiburones: ";
-             
-            if ((int)this.vContadores.get(6) >= 101) {//en caso de que el numero de tiburones sea mas del doble que peces
-//                resto=(int)this.vContadores.get(6)%100;//por debajo de 100
-//                multiplicador=(int)this.vContadores.get(6)/100;//multiplos de 100
-//                basePeces=100-resto;//si fuera porcentajes de 100 %
-//                baseTiburones=basePeces*multiplicador;//multiplicamos los tiburones respecto a la tasa dada
-//                tasaDiv=Mcd(basePeces,baseTiburones);//hallamos el minimo comun divisor para reducir la fraccion basePeces/baseTiburones
-//                //contadorPintado[0]= " "+ Arrays.toString(contadorPintado)+ 100-resto+"/";
-//                peces=basePeces/tasaDiv;//reducimos el denominador peces
-//                tiburones=baseTiburones/tasaDiv;//reducimos el denominador Tiburones
-                contadorPintado[0]= contadorPintado[0] + dameNumPeces() +"/"+dameNumTiburones(); 
-            }else
-                contadorPintado[0]= contadorPintado[0] + (100-(int)this.vContadores.get(6)) + "/"+(int)this.vContadores.get(6);
-            contadorPintado[1]="            Tiburones vivos: "+this.vContadores.get(7);
-            contadorPintado[1]=contadorPintado[1]+"####Peces vivos: "+this.vContadores.get(8);
-            contadorPintado[2]="      tiempo vida tiburones: "+this.vContadores.get(1);
-            contadorPintado[2]=contadorPintado[2]+"####tiempo vida peces: "+this.vContadores.get(2);
-            contadorPintado[3]="   tiempo crianza tiburones: "+this.vContadores.get(3);
+//            formateadorS="maximo Numero de animales: ";
+//            formateadorS=String.format("%40s",formateadorS);
+            
+            //contadorPintado[0]="maximo Numero de animales: " + (int)this.vContadores.get(0);
+            contadorPintado[0]=padLeft("maximo Numero de animales: ",40) + String.format("%-4d",(int)this.vContadores.get(0));
+            //contadorPintado[0]=contadorPintado[0]+"####Relacion peces Tiburones: ";
+            contadorPintado[0]=contadorPintado[0]+padRight("####Relacion peces Tiburones: ",30);
+            contadorPintado[0]= contadorPintado[0] + String.format("%4d",dameNumPeces());//calculo num peces segun porcentaje
+            contadorPintado[0]= contadorPintado[0] +"/"+ String.format("%-4d",dameNumTiburones());//calculo num tiburones segun porcentaje
+            //contadorPintado[0]= contadorPintado[0] + (100-(int)this.vContadores.get(6)) + "/"+(int)this.vContadores.get(6);
+            contadorPintado[1]=padLeft("Tiburones vivos: ",40)+String.format("%-4d",this.vContadores.get(7));
+            //contadorPintado[1]="            Tiburones vivos: "+this.vContadores.get(7);
+            contadorPintado[1]=contadorPintado[1]+padRight("####Peces vivos: ",32);
+             contadorPintado[1]=contadorPintado[1]+String.format("%-4d",this.vContadores.get(8));
+            //contadorPintado[1]=contadorPintado[1]+"####Peces vivos: "+this.vContadores.get(8);
+            contadorPintado[2]=padLeft("tiempo vida tiburones: ",40);
+            contadorPintado[2]=contadorPintado[2]+String.format("%-4d",this.vContadores.get(1));
+            //contadorPintado[2]="      tiempo vida tiburones: "+this.vContadores.get(1);
+            contadorPintado[2]=contadorPintado[2]+padRight("####tiempo vida peces: ",32);
+            contadorPintado[2]=contadorPintado[2]+String.format("%-4d",this.vContadores.get(2));
+            //contadorPintado[2]=contadorPintado[2]+"####tiempo vida peces: "+this.vContadores.get(2);
+            contadorPintado[3]=padRight("tiempo crianza tiburones: ",40);
+            contadorPintado[3]=contadorPintado[3]+String.format("%-4d",this.vContadores.get(3));
+            //contadorPintado[3]="   tiempo crianza tiburones: "+this.vContadores.get(3);
             contadorPintado[3]=contadorPintado[3]+"####tiempo crianza peces: "+this.vContadores.get(4);
             contadorPintado[4]="tiempo resistencia al hambre tiburones: "+this.vContadores.get(5); 
             contadorPintado[4]=contadorPintado[4]+"####duracion del escenario: "+this.vContadores.get(9);
@@ -219,10 +235,10 @@ public void decrementaContadorTiburones(){
      decrementaContadorGenerico(7);
  
  }
-public void pongoEnMar(casilla cas){
+public void pongoEnMar(casilla cas,Acuatico bicho){
     nivel nivelAct;
         nivelAct=(nivel) this.vNiveles.get(cas.getNivel());
-        nivelAct.ponEnNivel(cas);
+        nivelAct.ponEnNivel(cas,bicho);
 }
 public void creaPeces(boolean test){
     String avisoPeces="creado pez:";
@@ -233,7 +249,8 @@ public void creaPeces(boolean test){
            cuna.setHayPez(true);
            Pez pezActual=new Pez();//creo pez
             pezActual.nace(cuna);//le indico donde esta
-            pongoEnMar(cuna);//lo pongo en el mar
+            pongoEnMar(cuna,pezActual);//lo pongo en el mar
+            //this.vPeces.add(pezActual);//lo añado al vector de peces
            
            incrementaContadorPeces();
             numPeces--;
@@ -261,9 +278,10 @@ do{
                 System.out.println("|"+String.format("%3d",cuna.getPosicionY()));
            }
             cuna.setHayTiburon(true);
-           Tiburon TibActual=new Tiburon();//creo Tiburon
-            TibActual.nace(cuna);//le indico donde esta
-            pongoEnMar(cuna);//lo pongo en el mar
+           Tiburon tibActual=new Tiburon();//creo Tiburon
+            tibActual.nace(cuna);//le indico donde esta
+            pongoEnMar(cuna,tibActual);//lo pongo en el mar
+           // this.vTiburones.add(TibActual);//lo añado al vector de peces
            incrementaContadorTiburones();
             numTiburones--;
        }
