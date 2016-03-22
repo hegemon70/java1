@@ -9,6 +9,24 @@ public abstract class Acuatico implements serVivo {
     protected boolean vivo;
     protected int profundidad;
     protected String idBicho;
+    protected int vida;
+    protected int celo;
+
+    public int getCelo() {
+        return celo;
+    }
+
+    public void setCelo(int celo) {
+        this.celo = celo;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
     
     
     Acuatico(){
@@ -36,6 +54,8 @@ public abstract class Acuatico implements serVivo {
             this.posicion=cuna;
             this.vivo=true;
             this.idBicho=id;
+           
+            
     }
     @Override
     public void muere(casilla tumba){
@@ -74,6 +94,8 @@ public abstract class Acuatico implements serVivo {
         this.profundidad = profundidad;
     }
 
-
+    public void reduceVida(){
+        this.vida--;
+    }
     
 }

@@ -6,6 +6,7 @@
 package piscifactoria;
 //import piscifactoria.casilla;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -60,6 +61,48 @@ public class mar {
         
         
    }
+   public void vuelcaVectoresNivelEnGeneral(){
+       boolean volcadoPeces,volcadoTiburones;
+       this.vPeces.clear();
+       this.vTiburones.clear();
+       if (this.numNiv==1){//si Existe solo un nivel
+           try{
+            volcadoPeces=this.vPeces.addAll(this.vNiveles.get(0).vPecesNiv);
+           }catch(Exception e){
+               System.out.println(e.getMessage()+"fallo volcando peces al general");
+           }
+           try{  
+            volcadoTiburones=this.vTiburones.addAll(this.vNiveles.get(0).vTiburonesNiv);
+             }catch(Exception e){
+               System.out.println(e.getMessage()+"fallo volcando tiburones al general");
+           }
+       }else{//existen varios niveles
+       int c=0;
+       Iterator <nivel> nivelActual= this.vNiveles.iterator();//creo iterador
+       while (nivelActual.hasNext()) {//recorro el nivel mientras halla niveles
+           nivel next = nivelActual.next();//tomo el actual
+           try{
+           vPeces.addAll(next.vPecesNiv);//volcamos el vector de peces del nivel en el general
+           c++;
+            }catch(Exception e){
+               System.out.println(e.getMessage()+"fallo volcando peces del nivel "+c+" al general");
+           }
+       }
+       c=0;
+       Iterator <nivel> nivActual= this.vNiveles.iterator();
+       while (nivActual.hasNext()) {
+           
+           nivel next1 = nivActual.next();
+           try{
+           vTiburones.addAll(next1.vTiburonesNiv);//volcamos el vector de tiburones del nivel en el general
+            c++;
+            }catch(Exception e){
+               System.out.println(e.getMessage()+"fallo volcando tiburones del nivel "+c+" al general");
+           }
+       }
+             
+   }
+   }
    public void actualizaContadores(){
        //int cont;
        //ESTA PARTE CUANDO HAYA MAS NIVELES
@@ -78,6 +121,9 @@ public class mar {
 //        }
        if (this.numNiv==1){
            //cont=this.vNiveles.get(0).numPeces;
+           vuelcaVectoresNivelEnGeneral();
+           this.cambiaContadorPeces(this.vPeces.size());
+           this.cambiaContadorTiburones(this.vTiburones.size());
            this.cambiaContadorPeces(this.vNiveles.get(0).numPeces);//recupera el num peces del nivel unico
            this.cambiaContadorTiburones(this.vNiveles.get(0).numTiburones);//recupera el num Tiburon del nivel unico
            
@@ -364,11 +410,11 @@ public void creaPeces(boolean test){
        casilla cuna=dameCasillaAleatoria();//elijo casilla aleatoria
        if (esCasillaVacia(cuna)) {//si esta vacia
            cuna.setHayPez(true);
-           Pez pezActual=new Pez();//creo pez
+           Pez pezActual=new Pez(this.vContadores.get(2));//creo pez // le paso  lifeSpanP //pos 2
            idP=creaIdBicho(cuna,"");
-            pezActual.nace(cuna,idP);//le indico donde esta y le meto un id unico
+            pezActual.nace(cuna,idP);//le indico donde esta y le meto un id unico 
             pongoEnMar(cuna,pezActual);//lo pongo en el mar
-            this.vPeces.add(pezActual);//lo añado al vector de peces
+           // this.vPeces.add(pezActual);//lo añado al vector de peces
            
            incrementaContadorPeces();
             numPeces--;
@@ -393,11 +439,16 @@ do{
        if (esCasillaVacia(cuna)) {//si esta vacia
            
             cuna.setHayTiburon(true);
-           Tiburon tibActual=new Tiburon();//creo Tiburon
+           Tiburon tibActual;
+           tibActual = new Tiburon(this.vContadores.get(1),this.vContadores.get(5));//lifeSpanT //pos 1 y  feedT //pos 5
+
+//         breedT //pos 3
+//         breedP //pos 4
+//         feedT //pos 5
            idT=creaIdBicho(cuna,"");
             tibActual.nace(cuna,idT);
             pongoEnMar(cuna,tibActual);//lo pongo en el mar
-           this.vTiburones.add(tibActual);//lo añado al vector de peces
+          // this.vTiburones.add(tibActual);//lo añado al vector de peces
            incrementaContadorTiburones();
            if (test){
                 //System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
@@ -475,28 +526,43 @@ public casilla dameCasillaAleatoria(){
    
     }   
     
-    public void resuelveEscenario(boolean test) throws InterruptedException{
-            decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
-            
-            devoraPeces(test);
-            quitaMarcaActualizado();
-            //muerenBichos(); //por inamicion
-            //reproduceBichos;
-            //muevePeces();
-            mueveTiburones(test);
-            actualizaContadores();
-            
-    }
+ 
     public void devoraPeces(boolean test){
     //pre:
    //post: recorre todos los niveles devorando los peces que esten en casilla de tiburon
         nivel nivelAct;
         for (int i = 0; i < this.numNiv; i++) {
-            nivelAct=(nivel) this.vNiveles.get(i);
-            nivelAct.devoraPezEnNivel(this.vPeces,test);
-            
+//            nivelAct=(nivel) this.vNiveles.get(i);
+//            nivelAct.devoraPezEnNivel(test);
+            this.vNiveles.get(i).devoraPezEnNivel(test);
             
         }
+    }
+    public void eliminaTiburon(Tiburon T,boolean test){
+    //pre:
+    //post: elimina tiburon
+       nivel nivelAct;
+           nivelAct=this.vNiveles.get( T.getProfundidad());
+           nivelAct.eliminaTiburonEnNivel(T,test);
+    }
+    public void eliminaPez(Pez P, boolean test){
+    //pre:
+    //post: elimina tiburon
+       nivel nivelAct;
+           nivelAct=this.vNiveles.get(P.getProfundidad());
+           nivelAct.eliminaPezEnNivel(P,test);
+    }
+    public void muerenBichosAncianos(boolean test){
+    //pre:
+    //post: comprueba la vida del los tiburones y los mata si llega a 0
+        if (this.numNiv==1){
+        this.vNiveles.get(0).muerenBichosAncianosEnNivel(test);
+        }else
+        for (nivel cursor:  this.vNiveles) {
+            cursor.muerenBichosAncianosEnNivel(test);
+        }
+        
+        
     }
     public void mueveTiburones(boolean test){
    //pre:
@@ -521,7 +587,17 @@ public casilla dameCasillaAleatoria(){
         }
     }
     
-
+   public void resuelveEscenario(boolean test) throws InterruptedException{
+            decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
+            devoraPeces(test);
+            quitaMarcaActualizado();
+            muerenBichosAncianos(test); //por inamicion
+            //reproduceBichos;
+            //muevePeces();
+            mueveTiburones(test);
+            actualizaContadores();
+            
+    }
 }
 
   

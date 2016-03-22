@@ -10,7 +10,17 @@ package piscifactoria;
  * @author Fernando
  */
 public class Pez extends Acuatico {
+    
 
+   
+    
+    Pez(int MaxVida){//constructor
+        this.vida=MaxVida;
+    }
+    
+     
+    
+    
     @Override
     public casilla mueve(casilla origen) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

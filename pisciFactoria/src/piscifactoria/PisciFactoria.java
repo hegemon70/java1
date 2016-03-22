@@ -163,7 +163,7 @@ public class PisciFactoria {
                 breedP=3;
                 feedT=6;
                 porcentajeT=2;
-                duracionEscenario=15;
+                duracionEscenario=28;
                 tamChrono=4;
                 test=false;
         System.out.println("vamos a crear una pecera");
@@ -174,19 +174,19 @@ public class PisciFactoria {
             test=true;
         }
                     //nNiveles=pideDatoNumerico("dime el numero de Niveles","dame un numero valido de niveles");
-                nNiveles=pideDatoNumericoConDefault("dime el numero de Niveles [1]","dame un numero valido de niveles","1","1 nivel elegido ...");
+                nNiveles=pideDatoNumericoConDefault("dime el numero de Niveles ["+nNiveles+"]","dame un numero valido de niveles",Integer.toString(nNiveles),Integer.toString(nNiveles)+" nivel elegido ...");
                 //tamX=pideDatoNumerico("dime el X del nivel","dame un X valido");
-                tamX=pideDatoNumericoConDefault("dime el X del nivel [33]","dame un X valido","33","33 X elegido ...");
-                tamY=pideDatoNumericoConDefault("dime el Y del nivel [22]","dame un Y valido","22","22 Y elegido ...");
-                maxBug=pideDatoNumericoConDefault("dime el numero maximo de Bichos[255]","dame un numero de Bichos Valido","255","255 Bichos elegido...");
-                lifeSpanT=pideDatoNumericoConDefault("dime el max de tiempo de vida de los Tiburones [30]","dame un numero valido","30","30 elegido ...");
-                lifeSpanP=pideDatoNumericoConDefault("dime el max de tiempo de vida de los peces [25]","dame un numero valido","25","25 elegido ...");
-                breedT=pideDatoNumericoConDefault("dime cada cuanto crian los Tiburones [10]","dame un numero valido","10","10 elegido ...");
-                breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces [3]","dame un numero valido","3","3 elegido ...");
-                feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer [6]","dame un numero valido","6","6 elegido ...");
-                porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces[2]","dame un numero valido","2","2% elegido");
-                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario[15]","dame un numero valido","15","15 refrescos de pantalla elegido");
-                tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos[4]","dame un numero valido","4","4 segundos elegido");
+                tamX=pideDatoNumericoConDefault("dime el X del nivel ["+tamX+"]","dame un X valido",Integer.toString(tamX),Integer.toString(tamX)+" X elegido ...");
+                tamY=pideDatoNumericoConDefault("dime el Y del nivel ["+tamY+"]","dame un Y valido",Integer.toString(tamY),Integer.toString(tamY)+" Y elegido ...");
+                maxBug=pideDatoNumericoConDefault("dime el numero maximo de Bichos["+maxBug+"]","dame un numero de Bichos Valido",Integer.toString(maxBug),Integer.toString(maxBug)+" Bichos elegido...");
+                lifeSpanT=pideDatoNumericoConDefault("dime el max de tiempo de vida de los Tiburones ["+lifeSpanT+"]","dame un numero valido",Integer.toString(lifeSpanT),Integer.toString(lifeSpanT)+" elegido ...");
+                lifeSpanP=pideDatoNumericoConDefault("dime el max de tiempo de vida de los peces ["+lifeSpanP+"]","dame un numero valido",Integer.toString(lifeSpanP),Integer.toString(lifeSpanP)+" elegido ...");
+                breedT=pideDatoNumericoConDefault("dime cada cuanto crian los Tiburones ["+breedT+"]","dame un numero valido",Integer.toString(breedT),Integer.toString(breedT)+" elegido ...");
+                breedP=pideDatoNumericoConDefault("dime cada cuanto crian los peces ["+breedP+"]","dame un numero valido",Integer.toString(breedP),Integer.toString(breedP)+" elegido ...");
+                feedT=pideDatoNumericoConDefault("dime cuanto aguantan los tiburones sin comer ["+feedT+"]","dame un numero valido",Integer.toString(feedT),Integer.toString(feedT)+" elegido ...");
+                porcentajeT=pideDatoNumericoConDefault("dime el porcentaje de tiburones respecto de peces["+porcentajeT+"]","dame un numero valido",Integer.toString(porcentajeT),Integer.toString(porcentajeT)+"% elegido");
+                duracionEscenario=pideDatoNumericoConDefault("dime el tiempo de duracion del escenario["+duracionEscenario+"]","dame un numero valido",Integer.toString(duracionEscenario),Integer.toString(duracionEscenario)+" refrescos de pantalla elegido");
+                tamChrono=pideDatoNumericoConDefault("dame el tiempo de refresco pantalla en segundos["+tamChrono+"]","dame un numero valido",Integer.toString(tamChrono),Integer.toString(tamChrono)+" segundos elegido");
                 
         }
         
