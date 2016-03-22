@@ -440,15 +440,10 @@ do{
            
             cuna.setHayTiburon(true);
            Tiburon tibActual;
-           tibActual = new Tiburon(this.vContadores.get(1),this.vContadores.get(5));//lifeSpanT //pos 1 y  feedT //pos 5
-
-//         breedT //pos 3
-//         breedP //pos 4
-//         feedT //pos 5
+           tibActual = new Tiburon(this.vContadores.get(1),this.vContadores.get(3),this.vContadores.get(5));//lifeSpanT //pos 1 ,   breedt //pos 3 y  feedT //pos 5
            idT=creaIdBicho(cuna,"");
             tibActual.nace(cuna,idT);
             pongoEnMar(cuna,tibActual);//lo pongo en el mar
-          // this.vTiburones.add(tibActual);//lo añado al vector de peces
            incrementaContadorTiburones();
            if (test){
                 //System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
@@ -587,12 +582,45 @@ public casilla dameCasillaAleatoria(){
         }
     }
     
+    public boolean hayExcesoPoblacion(){
+        int nuevos,pobActual;
+        nuevos=0;
+        pobActual=0;
+        if(this.numNiv==1)
+            nuevos=this.vNiveles.get(0).recuentoBichosEnCeloEnNivel();
+        else{//hay varios niveles
+                for (nivel cursor: this.vNiveles){
+                    nuevos=nuevos+cursor.recuentoBichosEnCeloEnNivel();
+                }
+        }
+       return (nuevos+pobActual > this.vContadores.get(0)); //poblacion maxima         
+    }
+    public void reproduceBichos(boolean test){
+    //pre:
+ //         maxBug //pos 0
+//         lifeSpanT //pos 1
+//        lifeSpanP //pos 2
+//         breedT //pos 3
+//         breedP //pos 4
+//         feedT //pos 5
+   //post:reduce el celo de los bichos en todos los niveles cuando llega el celo a 0 se intenta reproducir
+        if(!hayExcesoPoblacion()) {
+           if (this.numNiv==1){
+            this.vNiveles.get(0).reproduceTiburonesEnNivel((int)this.vContadores.get(1),(int)this.vContadores.get(3),(int)this.vContadores.get(5),test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
+            this.vNiveles.get(0).reproducePecesEnNivel((int)this.vContadores.get(2),(int)this.vContadores.get(4),test);//lifeSpanP pos 2  breedP pos 4
+            }else
+            for (nivel cursor:  this.vNiveles) {
+                cursor.reproduceTiburonesEnNivel((int)this.vContadores.get(1),(int)this.vContadores.get(3),(int)this.vContadores.get(5),test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
+                cursor.reproducePecesEnNivel((int)this.vContadores.get(2),(int)this.vContadores.get(4),test);//lifeSpanP pos 2  breedP pos 4
+            }
+        }
+    }
    public void resuelveEscenario(boolean test) throws InterruptedException{
             decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
             devoraPeces(test);
             quitaMarcaActualizado();
             muerenBichosAncianos(test); //por inamicion
-            //reproduceBichos;
+            reproduceBichos(test);
             //muevePeces();
             mueveTiburones(test);
             actualizaContadores();

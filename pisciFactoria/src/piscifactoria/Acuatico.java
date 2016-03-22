@@ -11,6 +11,12 @@ public abstract class Acuatico implements serVivo {
     protected String idBicho;
     protected int vida;
     protected int celo;
+    
+    Acuatico(){
+    this.vivo=false;
+    
+    }
+    
 
     public int getCelo() {
         return celo;
@@ -29,10 +35,7 @@ public abstract class Acuatico implements serVivo {
     }
     
     
-    Acuatico(){
-    this.vivo=false;
     
-    }
 
     public String getIdBicho() {
         return idBicho;
@@ -97,5 +100,7 @@ public abstract class Acuatico implements serVivo {
     public void reduceVida(){
         this.vida--;
     }
-    
+    public void reduceCelo(){
+        this.celo--;
+    }
 }

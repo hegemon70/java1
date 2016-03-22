@@ -17,6 +17,10 @@ public class Pez extends Acuatico {
     Pez(int MaxVida){//constructor
         this.vida=MaxVida;
     }
+    Pez(int MaxVida,int MaxCelo){//constructor
+        this.vida=MaxVida;
+        this.celo=MaxCelo;
+    }
     
      
     

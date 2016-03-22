@@ -13,9 +13,10 @@ public class Tiburon extends Acuatico {
     protected int energia;
    
     
-    Tiburon(int MaxVida,int maxHambre){
+    Tiburon(int MaxVida,int MaxCelo,int maxHambre){
         this.vida=MaxVida;
         this.energia=maxHambre;
+        this.celo=MaxCelo;
     }
 
     public int getEnergia() {
