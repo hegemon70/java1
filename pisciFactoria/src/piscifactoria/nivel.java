@@ -6,6 +6,7 @@
 package piscifactoria;
 import static java.lang.System.exit;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -20,7 +21,6 @@ public class nivel {
     //public ArrayList casillero = new ArrayList <casilla>();
     public ArrayList<ArrayList<casilla>> casillero1;
     //public ArrayList vCazas =new ArrayList <casilla>();
-   
     //this.vPeces.add(pezActual);//lo añado al vector de peces
    
    nivel(){}
@@ -94,7 +94,7 @@ public class nivel {
     
       contaShift=this.dimensionX;
     
-       fila="";//inicializo fila para usar mas tarde
+       
        contFila=0;//inicializo indice de fila (en el bucle se incrementa antes de usarlo)
        
          while (contaShift>=0) {//recreo el espacio de desplazamiento en shiftT
@@ -161,7 +161,6 @@ public class nivel {
    }
     public String PonPie(String shift) {
         String fila,tapaInf;
-        fila="";
         tapaInf="__|";
         
       fila="|";
@@ -216,25 +215,54 @@ public static String padLeft(String s, int n) {
                 this.casillero1.get(y).get(x).setActualizado(false);
             }
         }
-                
-        
     }
+    
+    
     public String dameIdBicho(casilla cas){
         return cas.getIdBicho();
     }
-    public void devoraPezEnNivel(boolean test){
+    public void devoraPezEnNivel(ArrayList vPeces,boolean test){
         casilla cursor;
+        String idPez;
         for (int y = 0; y < this.dimensionY; y++) {//recorre el casillero desde el NO
             for (int x = 0; x < this.dimensionX; x++) {
                 cursor=this.casillero1.get(y).get(x);
                 if ((cursor.isHayTiburon())&&(cursor.isHayPez())){
                     if(test){
-                        System.out.println("tiburon devora pez en :"+x+"|"+y);
+                        System.out.println("tiburon devora pez en casilla:"+x+"#"+y);
                     }
+                    idPez=cursor.getIdBicho2();
+                    cursor.setIdBicho2("");//Quitamos la referencia al id del pez
+                    cursor.setHayPez(false);//borramos al pez de la casilla
+                    eliminaPez(idPez,vPeces);//eliminamos pez de vPeces
+                    numPeces--;
                 }
             }
         }
     
+    }
+    public void eliminaPez(String idPez,ArrayList vPeces){
+   
+    Iterator <Pez> cursor =vPeces.iterator();
+        while (cursor.hasNext()) {            
+            if (cursor.next().getIdBicho().equals(idPez)) {
+                cursor.remove();
+            }
+        }
+//            Iterator<String> nombreIterator = nombreArrayList.iterator();
+//while(nombreIterator.hasNext()){
+//	String elemento = nombreIterator.next();
+//	System.out.print(elemento+" / ");}
+}
+    
+   
+    public void eliminaTiburones(String idTib,ArrayList vTiburones){
+    Iterator <Tiburon> cursor =vTiburones.iterator();
+        while (cursor.hasNext()) {            
+            if (cursor.next().getIdBicho().equals(idTib)) {
+                cursor.remove();
+            }
+        }
     }
     
     public void mueveTiburonesEnNivel(boolean test){
@@ -313,7 +341,7 @@ public static String padLeft(String s, int n) {
       return casDestino;
 }
     public boolean estaEnBorde(casilla cas){
-        return (cas.getPosicionX()==0)||(cas.getPosicionY()==0)||(cas.getPosicionX()==this.dimensionX-1)||(cas.getPosicionX()==this.dimensionY);
+        return (cas.getPosicionX()==0)||(cas.getPosicionY()==0)||(cas.getPosicionX()==this.dimensionX-1)||(cas.getPosicionY()==this.dimensionY-1);
     }
     
     public String dimeQueRumboEs(int numRumbo){
@@ -734,7 +762,8 @@ public static String padLeft(String s, int n) {
                     default:
                         throw new AssertionError();
                 }
-            }else{//x=0 //borde Norte
+                
+            }else{//(y==this.dimensionY-1){//borde Norte
                 switch (rumbo) {
                  case 0://N se sale y aparece en borde S
                     testeaCasillaOrigen(x,y,test,rumbo);

@@ -109,12 +109,13 @@ public class casilla {
 //        String ira=console.getStringInColor(console.ANSI_RED,"X");
 //        String cas=console.getStringInColor(console.ANSI_RESET,"");
 //        String cas=console.getStringInColor(console.ANSI_BLUE,"");
+        String reset=console.getStringInColor(console.ANSI_RESET,"");
         
         String tib="T"; 
         String pez="P";
         String ira="X";
         String cas="";
-        if (test){tib=console.getStringInColor(console.ANSI_PURPLE,"T");}
+        if (test){tib=console.getStringInColor(console.ANSI_RED,"T")+reset;}
         
         String trazo=cas+"";
        if (T||P){ //HAY BICHO

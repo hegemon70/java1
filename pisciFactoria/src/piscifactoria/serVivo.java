@@ -14,9 +14,10 @@ public interface serVivo {
     /**
      *
      * @param cuna
+     * @param tumba
      */
     void nace(casilla cuna);
-    casilla mueve();
-    casilla reproduce();
-    casilla muere();
+    casilla mueve(casilla origen);
+    casilla reproduce(casilla cuna);
+    void muere(casilla tumba);
 }

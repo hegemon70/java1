@@ -115,7 +115,7 @@ public class PisciFactoria {
             
             public static void muestraSupervivientes(mar Oceano,boolean test){
              aclara(1);
-                System.out.println("listado de supervivientes");
+             if(test)System.out.println("listado de supervivientes");
                 for (String cursor: Oceano.pintaSupervientes(test)) {
                     System.out.println(cursor);
                 }

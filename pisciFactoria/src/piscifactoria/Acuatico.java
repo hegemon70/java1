@@ -37,6 +37,12 @@ public abstract class Acuatico implements serVivo {
             this.vivo=true;
             this.idBicho=id;
     }
+    @Override
+    public void muere(casilla tumba){
+        this.profundidad=tumba.getNivel();
+        this.posicion=tumba;
+        this.vivo=false;   
+    }
     
       
 //    public void nace(casilla cuna){

@@ -61,6 +61,7 @@ public class mar {
         
    }
    public void actualizaContadores(){
+       //int cont;
        //ESTA PARTE CUANDO HAYA MAS NIVELES
 //       nivel cursor;
 //        int numTiburonesTodosNiveles,numPecesTodosNiveles;
@@ -75,7 +76,12 @@ public class mar {
 //                 this.vContadores.add(8,numPecesTodosNiveles);
 //                 
 //        }
-       
+       if (this.numNiv==1){
+           //cont=this.vNiveles.get(0).numPeces;
+           this.cambiaContadorPeces(this.vNiveles.get(0).numPeces);//recupera el num peces del nivel unico
+           this.cambiaContadorTiburones(this.vNiveles.get(0).numTiburones);//recupera el num Tiburon del nivel unico
+           
+       }
        
         
    }
@@ -91,6 +97,7 @@ public static String padLeft(String s, int n) {
 //       int formateadorI;
 //       String formateadorS1col="%40s";
             String col=console.getStringInColor(console.ANSI_RED,"");
+            String reset=console.getStringInColor(console.ANSI_BLACK,"");
             String [] contadorPintado =new String [5];
 //            formateadorS="maximo Numero de animales: ";
 //            formateadorS=String.format("%40s",formateadorS);
@@ -123,8 +130,8 @@ public static String padLeft(String s, int n) {
             contadorPintado[4]=padLeft("tiempo resistencia al hambre tiburones: " ,40);
             contadorPintado[4]=contadorPintado[4]+String.format("%-4d",this.vContadores.get(5));
             //contadorPintado[4]=contadorPintado[4]+"####duracion del escenario: "+this.vContadores.get(9);
-            contadorPintado[4]=contadorPintado[4]+padRight("####duracion del escenario: ",32);
-            contadorPintado[4]=contadorPintado[4]+col+String.format("%-4d",this.vContadores.get(9));
+            contadorPintado[4]=contadorPintado[4]+padRight("####duracion del escenario: ",32)+reset;
+            contadorPintado[4]=contadorPintado[4]+col+String.format("%-4d",this.vContadores.get(9))+reset;
             
             
             
@@ -139,8 +146,12 @@ public static String padLeft(String s, int n) {
         int c=0;
         String [] pincel=new String [this.vPeces.size()+this.vTiburones.size()];
             for (Pez cursor: vPeces) {
-                pincel[c] =cursor.getIdBicho();
+                pincel[c] ="pez: "+cursor.getIdBicho();
                 c++;
+            }
+            c=0;
+            for (Tiburon cursor: vTiburones){
+                pincel[c]="tiburon: "+cursor.getIdBicho();
             }
         return pincel;
         }else {String [] pincel=new String[1];
@@ -206,7 +217,30 @@ public void pueblaMar(boolean test){
    creaTiburones(test);
    
 }
-
+public void cambiaContadorTiburones(int cantidad){
+        int i=7; //pos 7 tiburones vivos
+        cambiaContadorGenerico(i,cantidad);
+}
+public void cambiaContadorPeces(int cantidad){
+        int i=8; //pos 8 peces vivos
+        cambiaContadorGenerico(i,cantidad);
+}
+public void cambiaContadorGenerico(int i,int cantidad){
+//post: decrementa el contador indicado por i
+ //         maxBug //pos 0
+//         lifeSpanT //pos 1
+//        lifeSpanP //pos 2
+//         breedT //pos 3
+//         breedP //pos 4
+//         feedT //pos 5
+//         porcentajeT //pos 6
+//         //pos 7 tiburones vivos
+//         //pos 8 peces vivos
+//         duracionEscenario //pos 9 duracion Escenario
+//         tamChrono //pos 10 espera del refresco en segundos
+     this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
+     this.vContadores.add(i,cantidad);//inserto el nuevo valor en la pasicion indicada por i
+}
 public void decrementaContadorGenerico(int i){
   //post: decrementa el contador indicado por i
  //         maxBug //pos 0
@@ -221,7 +255,7 @@ public void decrementaContadorGenerico(int i){
 //         duracionEscenario //pos 9 duracion Escenario
 //         tamChrono //pos 10 espera del refresco en segundos
      Integer c;
-     c=(Integer)this.vContadores.get(i);
+     c=this.vContadores.get(i);
            c--;
            this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
            this.vContadores.add(i,c);//inserto el nuevo valor en la pasicion indicada por i
@@ -243,7 +277,7 @@ public void incrementaContadorGenerico(int i){
 
     
      Integer c;
-     c=(Integer)this.vContadores.get(i);
+     c=this.vContadores.get(i);
            c++;
            this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
            this.vContadores.add(i,c);//inserto el nuevo valor en la pasicion indicada por i
@@ -390,9 +424,9 @@ public casilla dameCasillaAleatoria(){
       yElect=(int)(rnd.nextDouble() * this.dimY + 0);
      // this.vNiveles.get(nivelElecto).vNivel.get(xElect).get(yElect);
       
-      nivel cursor =new nivel();
+      nivel cursor; //=new nivel();
       cursor=(nivel)this.vNiveles.get(nivelElecto);
-      casilla casActual=new casilla();
+      casilla casActual;//=new casilla();
       casActual= (casilla)cursor.casillero1.get(yElect).get(xElect);
               
       return casActual;
@@ -459,7 +493,9 @@ public casilla dameCasillaAleatoria(){
         nivel nivelAct;
         for (int i = 0; i < this.numNiv; i++) {
             nivelAct=(nivel) this.vNiveles.get(i);
-            nivelAct.devoraPezEnNivel(test);
+            nivelAct.devoraPezEnNivel(this.vPeces,test);
+            
+            
         }
     }
     public void mueveTiburones(boolean test){
