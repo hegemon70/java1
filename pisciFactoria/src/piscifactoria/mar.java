@@ -57,8 +57,10 @@ public class mar {
         this.vContadores.add(0);//pos 7 tiburones vivos
         this.vContadores.add(0);//pos 8 peces vivos
         this.vContadores.add(duracionEscenario);//pos 9 duracion Escenario
-        this.vContadores.add(tamChrono);//pos 10 espera del refresco en segundos
-        
+        this.vContadores.add(tamChrono);//pos 10 espera del refresco en 
+        this.vContadores.add(this.dimX);//pos 11 tamaño x de piscina
+        this.vContadores.add(this.dimY);//pos 12 tamaño x de piscina
+        this.vContadores.add(this.numNiv);//pos 13 num Niveles     
         
    }
    public void vuelcaVectoresNivelEnGeneral(){
@@ -284,6 +286,9 @@ public void cambiaContadorGenerico(int i,int cantidad){
 //         //pos 8 peces vivos
 //         duracionEscenario //pos 9 duracion Escenario
 //         tamChrono //pos 10 espera del refresco en segundos
+//          dimX //pos 11 tamaño x de piscina
+//          dimY //pos 12 tamaño x de piscina
+//          numNiv //pos 13 num Niveles 
      this.vContadores.remove(i);//quito el elemento de la posicion indicada por i
      this.vContadores.add(i,cantidad);//inserto el nuevo valor en la pasicion indicada por i
 }
@@ -300,6 +305,9 @@ public void decrementaContadorGenerico(int i){
 //         //pos 8 peces vivos
 //         duracionEscenario //pos 9 duracion Escenario
 //         tamChrono //pos 10 espera del refresco en segundos
+//          dimX pos 11 tamaño x de piscina
+//          dimY pos 12 tamaño x de piscina
+//          numNiv pos 13 num Niveles 
      Integer c;
      c=this.vContadores.get(i);
            c--;
@@ -320,6 +328,9 @@ public void incrementaContadorGenerico(int i){
 //         //pos 8 peces vivos
 //         duracionEscenario //pos 9 duracion Escenario
 //         tamChrono //pos 10 espera del refresco en segundos
+    //          dimX pos 11 tamaño x de piscina
+//          dimY pos 12 tamaño x de piscina
+//          numNiv pos 13 num Niveles 
 
     
      Integer c;
@@ -345,10 +356,10 @@ public void decrementaContadorTiburones(){
      decrementaContadorGenerico(7);
  
  }
-public void pongoEnMar(casilla cas,Acuatico bicho){
+public void pongoEnMar(casilla cas,Acuatico bicho,boolean test){
     nivel nivelAct;
         nivelAct=(nivel) this.vNiveles.get(cas.getNivel());
-        nivelAct.ponEnNivel(cas,bicho);
+        nivelAct.ponEnNivel(cas,bicho,test);
 }
 
 public  String creaIdBicho(casilla cas,String idPadre){
@@ -413,7 +424,7 @@ public void creaPeces(boolean test){
            Pez pezActual=new Pez(this.vContadores.get(2));//creo pez // le paso  lifeSpanP //pos 2
            idP=creaIdBicho(cuna,"");
             pezActual.nace(cuna,idP);//le indico donde esta y le meto un id unico 
-            pongoEnMar(cuna,pezActual);//lo pongo en el mar
+            pongoEnMar(cuna,pezActual,test);//lo pongo en el mar
            // this.vPeces.add(pezActual);//lo añado al vector de peces
            
            incrementaContadorPeces();
@@ -443,7 +454,7 @@ do{
            tibActual = new Tiburon(this.vContadores.get(1),this.vContadores.get(3),this.vContadores.get(5));//lifeSpanT //pos 1 ,   breedt //pos 3 y  feedT //pos 5
            idT=creaIdBicho(cuna,"");
             tibActual.nace(cuna,idT);
-            pongoEnMar(cuna,tibActual);//lo pongo en el mar
+            pongoEnMar(cuna,tibActual,test);//lo pongo en el mar
            incrementaContadorTiburones();
            if (test){
                 //System.out.print(cuna.getPosicionX()+":"+cuna.getPosicionY()+"|");
@@ -515,7 +526,6 @@ public casilla dameCasillaAleatoria(){
         }else//porcentaje entre 1 y 99%
             //si 98% tiburones devuelvo 1 pez y serian 49 tiburones
             //si 2% tiburones devuelvo 49 peces y seria un solo tiburon
-            
                    nPeces=(100-porcentajeT)/ Mcd(porcentajeT,100-porcentajeT); 
         return nPeces;
    
@@ -606,12 +616,12 @@ public casilla dameCasillaAleatoria(){
    //post:reduce el celo de los bichos en todos los niveles cuando llega el celo a 0 se intenta reproducir
         if(!hayExcesoPoblacion()) {
            if (this.numNiv==1){
-            this.vNiveles.get(0).reproduceTiburonesEnNivel((int)this.vContadores.get(1),(int)this.vContadores.get(3),(int)this.vContadores.get(5),test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
-            this.vNiveles.get(0).reproducePecesEnNivel((int)this.vContadores.get(2),(int)this.vContadores.get(4),test);//lifeSpanP pos 2  breedP pos 4
+            this.vNiveles.get(0).reproduceTiburonesEnNivel(this.vContadores,test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
+            this.vNiveles.get(0).reproducePecesEnNivel(this.vContadores,test);//lifeSpanP pos 2  breedP pos 4
             }else
             for (nivel cursor:  this.vNiveles) {
-                cursor.reproduceTiburonesEnNivel((int)this.vContadores.get(1),(int)this.vContadores.get(3),(int)this.vContadores.get(5),test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
-                cursor.reproducePecesEnNivel((int)this.vContadores.get(2),(int)this.vContadores.get(4),test);//lifeSpanP pos 2  breedP pos 4
+                cursor.reproduceTiburonesEnNivel(this.vContadores,test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
+                cursor.reproducePecesEnNivel(this.vContadores,test);//lifeSpanP pos 2  breedP pos 4
             }
         }
     }
