@@ -39,6 +39,10 @@ public class nivel {
         creaCasillas();
     }
    public void ponEnNivel(casilla cas,Acuatico bicho,boolean test){
+       //Pre: casilla es casilla vacia y valida, bicho es pez o tiburon
+       //Post: coloca en la casilla el id del bicho y toda su filiacion, activa el booleano de status tib o pez
+       //incrementa contador de pez o tib del nivel
+       //añade el bicho al arrayList correspondiente
        int indexY,indexX;
        indexX=cas.getPosicionX();
        indexY=cas.getPosicionY();
@@ -72,12 +76,16 @@ public class nivel {
             this.numTiburones++;
             if(test){
                 String rec = "tiburon creado en "+indexX+"#"+indexY;
-                
+                System.out.println(rec);
                     }
           }else{//es pez
               this.vPecesNiv.add((Pez)bicho);//lo añado al vector de 
               this.casillero1.get(indexY).get(indexX).setHayPez(true);
                this.numPeces++;
+                if(test){
+                String rec = "pez creado en "+indexX+"#"+indexY;
+                    System.out.println(rec);
+                    }
             }
 
    }
@@ -512,8 +520,34 @@ private String dameIdPadre(String idHijo){
 
 return idBicho;
 }
+     public void partoPez(casilla cuna,Pez padre,ArrayList vContadores,boolean test){
+     //pre:  en vContadores debe estar 
+         //lifeSpanP //pos 2
+        //breedP //pos 4
+         //en casilla cuna debe haber una casilla valida vacia
+        //post: creaPez en ella
+        int  vidaMax=(int)vContadores.get(2); //lifeSpanP //pos 2
+        int celoMax=(int)vContadores.get(3); //breedP //pos 4
+        String idP,rec;
+        Pez pezActual;
+        pezActual= new Pez(vidaMax,celoMax);
+        idP=creaIdBichoEnNivel(cuna,vContadores,padre.getIdBicho());
+        pezActual.nace(cuna,idP);
+        this.ponEnNivel(cuna, pezActual, test);
+         if (test) {
+             rec="nace pez:";
+                rec=rec+" "+ idP;
+                rec=rec+" del pez"+ this.dameIdPadre(idP);
+                System.out.println(rec);
+             
+         }
+     }
+
     public void partoTiburon(casilla cuna,Tiburon padre,ArrayList vContadores,boolean test){
-//pre: Tiburon padre,int vidaMax,int celoMax,int feedT,
+//pre: en vContadores debe estar 
+         //lifeSpanT //pos 1
+         //breedT //pos 3
+        //feedT //pos 5
 //post: 
         
         int vidaMax=(int)vContadores.get(1); //lifeSpanT //pos 1
@@ -579,14 +613,21 @@ return idBicho;
 //        int feedT=(int)vContadores.get(5);//  feedT 
         destino=decideLugarEnNivel(padre.getPosicion(),test);
         if (destino!=null){
-            creaIdBichoEnNivel(destino,vContadores, padre.getIdBicho());
+            //creaIdBichoEnNivel(destino,vContadores, padre.getIdBicho());
             partoTiburon(destino,padre,vContadores,test);
         }
        
          
     }
-     public void reproducePezEnNivel(Pez padre,int vidaMax,int celoMax,boolean test){
-            decideLugarEnNivel(padre.getPosicion(),test);
+     public void reproducePezEnNivel(Pez padre,ArrayList vContadores,boolean test){//,int vidaMax,int celoMax,boolean test){
+         //Pre:
+         //Post: decide una casilla destino y crea el pez en ella
+         casilla destino;   
+         destino=decideLugarEnNivel(padre.getPosicion(),test);
+         if (destino!=null){
+            //creaIdBichoEnNivel(destino,vContadores, padre.getIdBicho());
+            partoPez(destino,padre,vContadores,test);
+        }
     }
     //public void reproduceBichosEnNivel(boolean test){
     public void reproduceTiburonesEnNivel(ArrayList vContadores,boolean test){
@@ -594,11 +635,13 @@ return idBicho;
     //post:reduce el celo de los Tiburones cuando llega el celo a 0 se intenta reproducir
         String rec;
         if (this.vTiburonesNiv.size()==1){//solo hay 1
-            this.vTiburonesNiv.get(0).reduceCelo();
+            //this.vTiburonesNiv.get(0).reduceCelo();
             if(test){
+                if(this.vTiburonesNiv.get(0).getCelo()>0){
                 rec="el tiburon"+this.vTiburonesNiv.get(0).getIdBicho()+"intenta reproducirse";
                 System.out.println(rec);
                 }
+            }
         }else{
          for (Tiburon cursor:  this.vTiburonesNiv) {
             cursor.reduceCelo();
@@ -616,18 +659,28 @@ return idBicho;
        public void reproducePecesEnNivel(ArrayList vContadores,boolean test){
     //pre:  lifeSpanP pos 2  breedP pos 4
    //post:reduce el celo de los Tiburones cuando llega el celo a 0 se intenta reproducir
+           String rec;
          int vidaMax =(int) vContadores.get(2);
          int celoMax = (int)vContadores.get(4);
-        for (Pez cursor: this.vPecesNiv){
-            cursor.reduceCelo();
-             if (cursor.getCelo()<=0) {
-                  if(test){
-                      String rec = "el pez"+cursor.getIdBicho()+"intenta reproducirse";
-                      System.out.println(rec);
+         
+//         if (this.vPecesNiv.size() > 0){
+//             rec=""+vPecesNiv.size();
+//             System.out.println(rec);
+                for (Pez cursor: this.vPecesNiv){
+                    cursor.reduceCelo();
+                     if (cursor.getCelo()<=0) {
+                          if(test){
+                              rec = "el pez"+cursor.getIdBicho()+"intenta reproducirse";
+                              rec=rec + " numero peces antes de reproduccion :"+this.vPecesNiv.size();
+                              System.out.println(rec);
+                        }
+                        reproducePezEnNivel(cursor,vContadores,test);
+                    }
                 }
-                reproducePezEnNivel(cursor,vidaMax,celoMax,test);
-            }
-        }
+//        }else {rec="vpecesNiv VACIOOOOOO";
+//             System.out.println(rec);
+         
+                
     }
     public int recuentoBichosEnCeloEnNivel(){
     //pre:
@@ -711,6 +764,8 @@ return idBicho;
         return rumbo;
     }
     public void testeaCasillaOrigen(int x,int y, boolean test,int rumbo){
+    //pre: x e y deben estar entre tamX y tamY
+    //post:muestra por pantalla el runbo y las coordenadas de la casilla Origen
         if(test){
         String dir="se mueve al ";
                 dir=dir+dimeQueRumboEs(rumbo);
@@ -718,13 +773,18 @@ return idBicho;
         }
     }
     public void testeaCasillaDestino(int x,int y, boolean test,int rumbo){
+     //pre: x e y deben estar entre tamX y tamY
+    //post:muestra por pantalla el runbo y las coordenadas de la casilla Destino
 	  if (test){
               String rec = " destino"+" [X:"+x+" Y:"+y+"]";
               System.out.println(rec);
                         }
 	
 	}
-     public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test ){
+    //pre: x e y deben estar entre tamX y tamY
+    //post:muestra por pantalla el runbo y las coordenadas de la casilla Destino
+    
+     public casilla dameCasillaDestino(int rumbo,casilla origen,boolean test )     {
          //pre:
          //post:movimientos cartesianos el origen  de coordenadas x=0 y Y=0 esta al SO;
          //rumbo 0://N y++; rumbo 1://NE x++; y++; rumbo 2://E x++; rumbo 3://SE x++; y--; 
@@ -1206,6 +1266,10 @@ return idBicho;
         }
     return casDestino;
     }
+          //pre:
+         //post:movimientos cartesianos el origen  de coordenadas x=0 y Y=0 esta al SO;
+         //rumbo 0://N y++; rumbo 1://NE x++; y++; rumbo 2://E x++; rumbo 3://SE x++; y--; 
+         //rumbo 4://S y--; rumbo 5://SO x--; y--; rumbo 6://O x--; rumbo 7://NO x--; y++;
 }
 
 
