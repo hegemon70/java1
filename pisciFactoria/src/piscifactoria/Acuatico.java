@@ -7,7 +7,7 @@ package piscifactoria;
 public abstract class Acuatico implements serVivo {
     protected casilla posicion;
     protected boolean vivo;
-    protected boolean recienParido;
+    protected boolean enCelo;
     protected int profundidad;
     protected String idBicho;
     protected int vida;
@@ -15,8 +15,16 @@ public abstract class Acuatico implements serVivo {
     
     Acuatico(){
     this.vivo=false;
-    this.recienParido=false;
+    this.enCelo=false;
     
+    }
+
+    public boolean isEnCelo() {
+        return enCelo;
+    }
+
+    public void setEnCelo(boolean enCelo) {
+        this.enCelo = enCelo;
     }
     
 
@@ -36,14 +44,7 @@ public abstract class Acuatico implements serVivo {
         this.vida = vida;
     }
 
-    public boolean isRecienParido() {
-        return recienParido;
-    }
-
-    public void setRecienParido(boolean recienParido) {
-        this.recienParido = recienParido;
-    }
-    
+  
     
     
 

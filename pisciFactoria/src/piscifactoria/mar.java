@@ -401,7 +401,19 @@ public  String creaIdBicho(casilla cas,String idPadre){
    
 return idBicho;
 }
-
+    //pre:IdPadre es un idBicho formateado o un String vacio
+    //post: devuelve un String que combina el contador de escenario
+    //concatenado con un #
+    //indice del nivel en el que ha nacido
+    //concatenado con un #
+    //x de la casilla
+    //concatenado con un #
+    //y de la casilla
+    //concatenado con un #
+    //id del del padre
+    //en caso de que sea el primero -1#-1#-1#-1
+    //ejemplo 15#00#25#19#-1#-1#-1#-1
+    //ejemplo bicho nacido del anterior  10#00#20#10#15#00#25#19
 
 public int dameTamañoDelEnteroMayor(int a,int b,int c,int d){
     //pre:
@@ -546,6 +558,8 @@ public casilla dameCasillaAleatoria(){
             
         }
     }
+        //pre:
+   //post: recorre todos los niveles devorando los peces que esten en casilla de tiburon
     public void eliminaTiburon(Tiburon T,boolean test){
     //pre:
     //post: elimina tiburon
@@ -553,25 +567,30 @@ public casilla dameCasillaAleatoria(){
            nivelAct=this.vNiveles.get( T.getProfundidad());
            nivelAct.eliminaTiburonEnNivel(T,test);
     }
-    public void eliminaPez(Pez P, boolean test){
     //pre:
     //post: elimina tiburon
+    public void eliminaPez(Pez P, boolean test){
+    //pre:
+    //post: elimina Pez
        nivel nivelAct;
            nivelAct=this.vNiveles.get(P.getProfundidad());
            nivelAct.eliminaPezEnNivel(P,test);
     }
+    //pre:
+    //post: elimina Pez
     public void muerenBichosAncianos(boolean test){
     //pre:
-    //post: comprueba la vida del los tiburones y los mata si llega a 0
+    //post: comprueba la vida del los bichos y los mata si llega a 0
         if (this.numNiv==1){
         this.vNiveles.get(0).muerenBichosAncianosEnNivel(test);
         }else
         for (nivel cursor:  this.vNiveles) {
             cursor.muerenBichosAncianosEnNivel(test);
-        }
-        
+        } 
         
     }
+    //pre:
+    //post: comprueba la vida del los tiburones y los mata si llega a 0
     public void mueveTiburones(boolean test){
    //pre:
    //post: recorre todos los niveles moviendo los tiburones
@@ -619,7 +638,7 @@ public casilla dameCasillaAleatoria(){
    //post:reduce el celo de los bichos en todos los niveles cuando llega el celo a 0 se intenta reproducir
         if(!hayExcesoPoblacion()) {
            if (this.numNiv==1){
-               temporadaCelo();
+               //temporadaCelo();
            //this.vTiburones.get(0).reduceCelo();
             this.vNiveles.get(0).reproduceTiburonesEnNivel(this.vContadores,test);//vidaMax=lifeSpanT pos 1  celoMax=breedT pos 3  feedT pos 5 
             this.vNiveles.get(0).reproducePecesEnNivel(this.vContadores,test);//lifeSpanP pos 2  breedP pos 4

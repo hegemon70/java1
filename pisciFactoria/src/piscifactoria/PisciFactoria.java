@@ -158,11 +158,11 @@ public class PisciFactoria {
                 tamY=22;
                 maxBug=255;
                 lifeSpanT=30;
-                lifeSpanP=25;
+                lifeSpanP=10;
                 breedT=10;
-                breedP=3;
+                breedP=5;
                 feedT=6;
-                porcentajeT=2;
+                porcentajeT=50;
                 duracionEscenario=28;
                 tamChrono=4;
                 test=false;
