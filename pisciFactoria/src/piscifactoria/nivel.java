@@ -565,7 +565,7 @@ return idBicho;
         idP=creaIdBichoEnNivel(cuna,vContadores,padre.getIdBicho());
         pezActual.nace(cuna,idP);
         this.ponEnNivel(cuna, pezActual, test);
-        padre.setCelo(celoMax);
+       // padre.setCelo(celoMax);
         
          if (test) {
              rec="nace pez:";
@@ -586,7 +586,6 @@ return idBicho;
          //breedT //pos 3
         //feedT //pos 5
 //post: 
-        
         int vidaMax=(int)vContadores.get(1); //lifeSpanT //pos 1
         int celoMax=(int)vContadores.get(3); //breedT //pos 3
         int feedT=(int)vContadores.get(5); //feedT //pos 5
@@ -671,27 +670,51 @@ return idBicho;
     //pre: en vContenedores lifeSpanT pos 1  breedT pos 3  feedT pos 5
     //post:reduce el celo de los Tiburones cuando llega el celo a 0 se intenta reproducir
         String rec;
-        if (this.vTiburonesNiv.size()==1){//solo hay 1
-            //this.vTiburonesNiv.get(0).reduceCelo();
-//            if(test){
-//                if(this.vTiburonesNiv.get(0).getCelo()>0){
-//                rec="el tiburon"+this.vTiburonesNiv.get(0).getIdBicho()+"intenta reproducirse";
-//                System.out.println(rec);
-//                }
-//            }
-        }else{
-         for (Tiburon cursor:  this.vTiburonesNiv) {
-            cursor.reduceCelo();
-            if (cursor.getCelo()<=0) {
-                if(test){
-                rec="el tiburon"+cursor.getIdBicho()+"intenta reproducirse";
-                System.out.println(rec);
-                }
-                reproduceTiburonEnNivel(cursor,vContadores,test);
-            }
-        }
-        }
+        
+        reduceCeloTiburonesEnNivel();
+        poneEnCeloTiburonesEnNivel(); 
+           for (Tiburon cursor: this.vTiburonesNiv){
+                     //if (cursor.getCelo()<=0) {
+                    if (cursor.isEnCelo()) {
+                          if(test){
+                              rec = "el tiburon"+cursor.getIdBicho()+"intenta reproducirse";
+                              rec=rec + " numero tiburones antes de reproduccion :"+this.vTiburonesNiv.size();
+                              System.out.println(rec);
+                        }
+                        reproduceTiburonEnNivel(cursor,vContadores,test);
+                    }
+               }
+
+          if (this.vBebesTiburonNiv.size()>0) {
+               this.vTiburonesNiv.addAll(this.vBebesTiburonNiv);
+               this.vBebesTiburonNiv.clear();
+           }
+          reanudaNoCeloTiburones(vContadores);
     }
+    
+    public void reduceCeloTiburonesEnNivel(){
+    //pre:  
+   //post:reduce el celo de todos los Tiburones
+        Iterator <Tiburon> cursor=this.vTiburonesNiv.iterator();
+           while (cursor.hasNext()){
+               cursor.next().reduceCelo();
+           }
+    }
+    //pre:  
+   //post:reduce el celo de todos los Tiburones
+    public void poneEnCeloTiburonesEnNivel(){
+    //pre:  
+   //post:pone en celo a los Tiburones si su nivel de celo es inferior a 0
+        for (int i = 0; i < this.vTiburonesNiv.size(); i++) {
+            if (this.vTiburonesNiv.get(i).getCelo() <= 0) {
+                this.vTiburonesNiv.get(i).setEnCelo(true);
+            }
+ 
+        }
+    } 
+    //pre:  
+   //post:pone en celo a los Tiburones si su nivel de celo es inferior a 0
+    
     public void reduceCeloPecesEnNivel(){
     //pre:  
    //post:reduce el celo de los Peces 
@@ -715,7 +738,8 @@ return idBicho;
     }
      //pre:  
    //post:pone en celo a los Peces si su nivel de celo es inferior a 0
-     public void reanudaNoCeloPeces(ArrayList vContadores){
+    
+    public void reanudaNoCeloPeces(ArrayList vContadores){
  //pre:
  //post: si esta el boolean en celo lo resetea y pone el celo al maximo
      int maxCelo=(int) vContadores.get(4);//breed P pos4
@@ -729,7 +753,23 @@ return idBicho;
  }
   //pre:
  //post: si esta el boolean en celo lo resetea y pone el celo al maximo
-       public void reproducePecesEnNivel(ArrayList vContadores,boolean test){
+    
+ public void reanudaNoCeloTiburones(ArrayList vContadores){
+ //pre:
+ //post: si esta el boolean en celo lo resetea y pone el celo al maximo
+     int maxCelo=(int) vContadores.get(3);//breed T pos3
+     for (int i = 0; i < this.vTiburonesNiv.size(); i++) {
+         if ( this.vTiburonesNiv.get(i).isEnCelo()) {
+           this.vTiburonesNiv.get(i).setEnCelo(false);
+           this.vTiburonesNiv.get(i).setCelo(maxCelo);           
+         }
+     }
+
+ }
+  //pre:
+ //post: si esta el boolean en celo lo resetea y pone el celo al maximo
+        
+ public void reproducePecesEnNivel(ArrayList vContadores,boolean test){
     //pre:  lifeSpanP pos 2  breedP pos 4
    //post:reduce el celo de los Peces cuando llega el celo a 0 se intenta reproducir
            String rec;
@@ -754,10 +794,7 @@ return idBicho;
                     }
                }
                                
-           if (this.vBebesTiburonNiv.size()>0) {
-               this.vTiburonesNiv.addAll(this.vBebesTiburonNiv);
-               this.vBebesTiburonNiv.clear();
-           }
+         
            if (this.vBebesPezNiv.size()>0) {
                this.vPecesNiv.addAll(this.vBebesPezNiv);//añade los bebes Pez a el vector peces
                this.vBebesPezNiv.clear();//vacio el vector de bebes
@@ -800,6 +837,7 @@ return idBicho;
         }
         return numTiburonesEnCelo;
     }
+    
  public int dameTamañoDelEnteroMayor(int a,int b,int c,int d){
     //pre:
     //post: devuelve el tamaño del numero mayor de los cuatro pasado por parametro
