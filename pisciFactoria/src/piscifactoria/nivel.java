@@ -23,6 +23,8 @@ public class nivel {
     //public ArrayList vCazas =new ArrayList <casilla>();
     public ArrayList<Pez> vPecesNiv;
     public ArrayList<Tiburon> vTiburonesNiv;
+    public ArrayList<Pez> vBebesPezNiv;
+    public ArrayList<Tiburon> vBebesTiburonNiv;
     //this.vPeces.add(pezActual);//lo añado al vector de peces
    
    nivel(){}
@@ -35,6 +37,8 @@ public class nivel {
         this.casillero1= new ArrayList();
         this.vPecesNiv = new ArrayList();
         this.vTiburonesNiv = new ArrayList();
+        this.vBebesTiburonNiv = new ArrayList();
+        this.vBebesPezNiv = new ArrayList();
         creaColumnas();
         creaCasillas();
     }
@@ -55,23 +59,9 @@ public class nivel {
            //System.exit(indexX);
        }
        this.casillero1.get(indexY).get(indexX).setIdBicho(bicho.getIdBicho());//pongo en la casilla el id del Pez
-       
-//       if (cas.isHayPez()) {//si es pez incremento el contado de peces en el nivel
-//           
-//           this.vPecesNiv.add((Pez)bicho);//lo añado al vector de peces
-//           //cas.setIndiceBicho((this.vPeces.size()-1));//meto en casilla el indice de vPeces
-//           this.numPeces++;
-//       }
-//       if (cas.isHayTiburon()) {//si es tiburon incremento el contado de tiburones en el nivel
-//      
-//           this.vTiburonesNiv.add((Tiburon)bicho);//lo añado al vector de tiburones
-//          // cas.setIndiceBicho((this.vTiburones.size()-1));//meto en casilla el indice de vTiburones
-//           this.numTiburones++;
-//       }
-//       if ((!cas.isHayPez()&&(!cas.isHayTiburon()))){//casilla vacia es reproduccion
-//         
+
           if (esObjetoTiburon(bicho)){ //es Tiburon
-            this.vTiburonesNiv.add((Tiburon)bicho); //lo añado al vector de tiburones
+            this.vBebesTiburonNiv.add((Tiburon)bicho); //lo añado al vector de bebes tiburon
             this.casillero1.get(indexY).get(indexX).setHayTiburon(true);
             this.numTiburones++;
             if(test){
@@ -79,7 +69,7 @@ public class nivel {
                 System.out.println(rec);
                     }
           }else{//es pez
-              this.vPecesNiv.add((Pez)bicho);//lo añado al vector de 
+              this.vBebesPezNiv.add((Pez)bicho);//lo añado al vector de bebesPez
               this.casillero1.get(indexY).get(indexX).setHayPez(true);
                this.numPeces++;
                 if(test){
@@ -520,6 +510,38 @@ private String dameIdPadre(String idHijo){
 
 return idBicho;
 }
+ 
+ public void reanudaCeloPez(Pez padre){
+ //pre:
+ //post: busca en Pez en vPecesNiv y coloca el celo al maximo
+     
+ }
+// public int dameIndiceBicho(Acuatico objetivo){
+//     int indice=-1;
+//     for (int i = 0; i < this.vPecesNiv.size(); i++) {
+//         if (esMismoPez(objetivo,this.vPecesNiv.get(i))){
+//             return i;
+//         }
+//     }
+// return indice;
+// }
+ 
+ public boolean esMismoBicho(Acuatico a,Acuatico b){
+    return a.posicion.getPosicionX()==b.posicion.getPosicionX() && a.posicion.getPosicionY()==b.posicion.getPosicionY();
+ }
+ public boolean esMismoPez(Pez a,Pez b){
+    return esMismoBicho(a,b);
+ }
+ public int dameIndicePez(Pez objetivo){
+    int indice=-1;
+     for (int i = 0; i < this.vPecesNiv.size(); i++) {
+         if (esMismoPez(objetivo,this.vPecesNiv.get(i))){
+             return i;
+         }
+     }
+ return indice;
+ }
+ 
      public void partoPez(casilla cuna,Pez padre,ArrayList vContadores,boolean test){
      //pre:  en vContadores debe estar 
          //lifeSpanP //pos 2
@@ -527,13 +549,15 @@ return idBicho;
          //en casilla cuna debe haber una casilla valida vacia
         //post: creaPez en ella
         int  vidaMax=(int)vContadores.get(2); //lifeSpanP //pos 2
-        int celoMax=(int)vContadores.get(3); //breedP //pos 4
+        int celoMax=(int)vContadores.get(4); //breedP //pos 4
         String idP,rec;
         Pez pezActual;
         pezActual= new Pez(vidaMax,celoMax);
         idP=creaIdBichoEnNivel(cuna,vContadores,padre.getIdBicho());
         pezActual.nace(cuna,idP);
         this.ponEnNivel(cuna, pezActual, test);
+        padre.setCelo(celoMax);
+        
          if (test) {
              rec="nace pez:";
                 rec=rec+" "+ idP;
@@ -655,19 +679,29 @@ return idBicho;
         }
         }
     }
+    public void reduceCeloPecesEnNivel(){
+    //pre:  
+   //post:reduce el celo de los Peces 
+     Iterator <Pez> cursor=this.vPecesNiv.iterator();
+           while (cursor.hasNext()){
+               cursor.next().reduceCelo();
+           }
+    }
     
        public void reproducePecesEnNivel(ArrayList vContadores,boolean test){
     //pre:  lifeSpanP pos 2  breedP pos 4
-   //post:reduce el celo de los Tiburones cuando llega el celo a 0 se intenta reproducir
+   //post:reduce el celo de los Peces cuando llega el celo a 0 se intenta reproducir
            String rec;
-         int vidaMax =(int) vContadores.get(2);
-         int celoMax = (int)vContadores.get(4);
+ //        int vidaMax =(int) vContadores.get(2);
+ //        int celoMax =(int) vContadores.get(4);
          
 //         if (this.vPecesNiv.size() > 0){
 //             rec=""+vPecesNiv.size();
 //             System.out.println(rec);
+           reduceCeloPecesEnNivel();
+////        
+         
                 for (Pez cursor: this.vPecesNiv){
-                    cursor.reduceCelo();
                      if (cursor.getCelo()<=0) {
                           if(test){
                               rec = "el pez"+cursor.getIdBicho()+"intenta reproducirse";
@@ -676,7 +710,17 @@ return idBicho;
                         }
                         reproducePezEnNivel(cursor,vContadores,test);
                     }
-                }
+               }
+                               
+           if (this.vBebesTiburonNiv.size()>0) {
+               this.vTiburonesNiv.addAll(this.vBebesTiburonNiv);
+               this.vBebesTiburonNiv.clear();
+           }
+           if (this.vBebesPezNiv.size()>0) {
+               this.vPecesNiv.addAll(this.vBebesPezNiv);//añade los bebes Pez a el vector peces
+               this.vBebesPezNiv.clear();//vacio el vector de bebes
+           }
+
 //        }else {rec="vpecesNiv VACIOOOOOO";
 //             System.out.println(rec);
          
