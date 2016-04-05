@@ -203,6 +203,7 @@ public static String padLeft(String s, int n) {
             c=0;
             for (Tiburon cursor: vTiburones){
                 pincel[c]="tiburon: "+cursor.getIdBicho();
+                c++;
             }
         return pincel;
         }else {String [] pincel=new String[1];
@@ -604,6 +605,20 @@ public casilla dameCasillaAleatoria(){
         }
         
     }
+    
+    public void muevePeces(boolean test){
+         //pre:
+   //post: recorre todos los niveles moviendo los peces
+        nivel nivelAct;
+
+        for (int i = 0; i < this.numNiv; i++) {//recorro los niveles
+                 nivelAct=(nivel) this.vNiveles.get(i);
+                 nivelAct.muevePecesEnNivel(test);
+//                 numTiburonesTodosNiveles=numTiburonesTodosNiveles + nivelAct.numTiburones;//sumamos los tiburones en cada nivel
+        }
+        
+    
+    }
     public void quitaMarcaActualizado(){
     //pre:
    //post:pone todas las casilla del mar a no actualizado
@@ -661,17 +676,24 @@ public casilla dameCasillaAleatoria(){
     }
 //for each (Acuatico cursor: this.vTiburones){
         
-                
+    public void muerenTiburonesHambre(boolean test){
+    if(this.numNiv==1){
+        this.vNiveles.get(0).muerenTiburonesHambreEnNivel(test);
+    }
+        
+        
+    }
             
      
     
    public void resuelveEscenario(boolean test) throws InterruptedException{
             decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
             devoraPeces(test);
+            muerenTiburonesHambre(test);
             quitaMarcaActualizado();
             muerenBichosAncianos(test); //por inamicion
             reproduceBichos(test);
-            //muevePeces();
+            muevePeces(test);
             mueveTiburones(test);
             actualizaContadores();
             

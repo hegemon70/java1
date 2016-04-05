@@ -11,12 +11,16 @@ package piscifactoria;
  */
 public class Tiburon extends Acuatico {
     protected int energia;
+    protected int energiaPlena;
+
+   
    
     
     Tiburon(int MaxVida,int MaxCelo,int maxHambre){
         this.vida=MaxVida;
         this.energia=maxHambre;
         this.celo=MaxCelo;
+        this.energiaPlena=maxHambre;
     }
 
     public int getEnergia() {
@@ -28,7 +32,7 @@ public class Tiburon extends Acuatico {
     }
 
    
-
+    
     
     
     
@@ -43,8 +47,12 @@ public class Tiburon extends Acuatico {
     }
  
     
-
+    public void reduceFuerza(){
+        this.energia--;
+    }
  
-    
+    public void recuperaFuerza(){
+        this.energia=this.energiaPlena;
+    }
    
 }

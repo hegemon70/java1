@@ -164,7 +164,7 @@ public class PisciFactoria {
                 feedT=6;
                 porcentajeT=50;
                 duracionEscenario=28;
-                tamChrono=4;
+                tamChrono=5;
                 test=false;
         System.out.println("vamos a crear una pecera");
         if (!AnyKeyToCancel_EnterToContinue("pulsa enter para valores por defecto o cualquier otra tecla para  ajustarlos manualmente")){

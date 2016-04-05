@@ -23,8 +23,8 @@ public class nivel {
     //public ArrayList vCazas =new ArrayList <casilla>();
     public ArrayList<Pez> vPecesNiv;
     public ArrayList<Tiburon> vTiburonesNiv;
-    public ArrayList<Pez> vBebesPezNiv;
-    public ArrayList<Tiburon> vBebesTiburonNiv;
+    public ArrayList<Pez> vTempPezNiv;
+    public ArrayList<Tiburon> vTempTiburonNiv;
     //this.vPeces.add(pezActual);//lo añado al vector de peces
    
    nivel(){}
@@ -37,11 +37,12 @@ public class nivel {
         this.casillero1= new ArrayList();
         this.vPecesNiv = new ArrayList();
         this.vTiburonesNiv = new ArrayList();
-        this.vBebesTiburonNiv = new ArrayList();
-        this.vBebesPezNiv = new ArrayList();
+        this.vTempTiburonNiv = new ArrayList();
+        this.vTempPezNiv = new ArrayList();
         creaColumnas();
         creaCasillas();
     }
+   
    public void ponEnNivel(casilla cas,Acuatico bicho,boolean test){
        //Pre: casilla es casilla vacia y valida, bicho es pez o tiburon
        //Post: coloca en la casilla el id del bicho y toda su filiacion, activa el booleano de status tib o pez
@@ -54,14 +55,14 @@ public class nivel {
            this.casillero1.get(indexY).get(indexX).setNivel((int)cas.getNivel());
        }catch(Exception e){
            
-           String rec = ""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+"";
+           String rec = ""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+" en PonEnNivel";
            System.out.println(rec);
            //System.exit(indexX);
        }
        this.casillero1.get(indexY).get(indexX).setIdBicho(bicho.getIdBicho());//pongo en la casilla el id del Pez
 
           if (esObjetoTiburon(bicho)){ //es Tiburon
-            this.vBebesTiburonNiv.add((Tiburon)bicho); //lo añado al vector de bebes tiburon
+            this.vTempTiburonNiv.add((Tiburon)bicho); //lo añado al vector de bebes tiburon
             this.casillero1.get(indexY).get(indexX).setHayTiburon(true);
             this.numTiburones++;
             if(test){
@@ -69,7 +70,7 @@ public class nivel {
                 System.out.println(rec);
                     }
           }else{//es pez
-              this.vBebesPezNiv.add((Pez)bicho);//lo añado al vector de bebesPez
+              this.vTempPezNiv.add((Pez)bicho);//lo añado al vector de bebesPez
               this.casillero1.get(indexY).get(indexX).setHayPez(true);
                this.numPeces++;
                 if(test){
@@ -79,6 +80,48 @@ public class nivel {
             }
 
    }
+   
+   public void quitaDeNivel(casilla cas,Acuatico bicho,boolean test){
+       //Pre: casilla es casilla llena y valida, bicho es pez o tiburon
+       //Post: coloca en la casilla el id del bicho a "" y desactiva el booleano de status tib o pez
+       //decrementa contador de pez o tib del nivel
+       //añade el bicho al arrayList temporal correspondiente 
+       int indexY,indexX;
+       indexX=cas.getPosicionX();
+       indexY=cas.getPosicionY();
+//       try { 
+//           this.casillero1.get(indexY).get(indexX).setNivel((int)cas.getNivel());
+//       }catch(Exception e){
+//           
+//           String rec = ""+e.getMessage()+" excepcion con indices X:"+indexX+" Y:"+indexY+" en PonEnNivel";
+//           System.out.println(rec);
+//           //System.exit(indexX);
+//       }
+       this.casillero1.get(indexY).get(indexX).setIdBicho("");//borro de la casilla el id del Bicho POSIBLE REPETICION eliminaTiburondeNivel
+
+          if (esObjetoTiburon(bicho)){ //es Tiburon
+            this.vTempTiburonNiv.add((Tiburon)bicho); //lo añado al vector de tiburones eliminados
+            this.casillero1.get(indexY).get(indexX).setHayTiburon(false);//borro el bit de tiburon POSIBLE REPETICION eliminaTiburondeNivel
+            this.numTiburones--;
+            if(test){
+                String rec = "tiburon muerto en "+indexX+"#"+indexY;
+                System.out.println(rec);
+                    }
+          }else{//es pez
+              this.vTempPezNiv.add((Pez)bicho);//lo añado al vector de peces eliminados
+              this.casillero1.get(indexY).get(indexX).setHayPez(false);
+               this.numPeces--;
+                if(test){
+                String rec = "pez muerto en "+indexX+"#"+indexY;
+                    System.out.println(rec);
+                    }
+            }
+
+   }
+   //Pre: casilla es casilla vacia y valida, bicho es pez o tiburon
+       //Post: coloca en la casilla el id del bicho y toda su filiacion, activa el booleano de status tib o pez
+       //incrementa contador de pez o tib del nivel
+       //añade el bicho al arrayList correspondiente
 
    private boolean esObjetoTiburon(Acuatico bicho){
        String s1 = bicho.getClass().getName();
@@ -241,30 +284,74 @@ public class nivel {
             }
         }
     }
-    
+    public void muereTiburonHambreEnNivel(Tiburon cursor,boolean test){
+            this.eliminaTiburonEnNivel(cursor,test);
+            //this.quitaDeNivel(null, cursor, test);
+            
+    }
+     public void muerenTiburonesHambreEnNivel(boolean test){
+    //pre:
+    //post: comprueba la fuerza de los tiburones y los mata si llega a 0  
+         String rec;
+         if (this.vTiburonesNiv.size()>0) {//compruebo que queden tiburones
+                for (Tiburon cursor: this.vTiburonesNiv){
+                cursor.reduceFuerza();
+              if (cursor.getEnergia()<=0){
+                  if (test) {
+                      rec =" muere de hambre el tiburon "+cursor.getIdBicho();
+                      System.out.println(rec);
+                  }
+                  muereTiburonHambreEnNivel(cursor,test);
+                  
+              }
+
+           }
+          this.eliminaTiburonesDeVector(this.vTempTiburonNiv, test);
+           this.vTempTiburonNiv.clear();//reseteo arrray temporal de tiburones
+         }else {rec="no hay mas tiburones";
+                 System.out.println(rec);  
+                 }
+ 
+ }
+      //pre:
+    //post: comprueba la fuerza de los tiburones y los mata si llega a 0   
+     
+     public void muereTiburonAncianoEnNivel(Tiburon cursor,boolean test){
+            this.eliminaTiburonEnNivel(cursor,test);
+     }
+     public void muerePezAncianoEnNivel(Pez cursor,boolean test){
+            this.eliminaPezEnNivel(cursor,test);
+     }
      public void muerenBichosAncianosEnNivel(boolean test){
     //pre:
     //post: comprueba la vida del los tiburones y los mata si llega a 0
-        for (Tiburon cursor:  this.vTiburonesNiv) {
-            cursor.reduceVida();
-            if (cursor.getVida()<=0) {
-                if(test){
-                    String rec = "muere de viejo el tiburon"+cursor.getIdBicho();
-                    System.out.println(rec);
+         if(this.vTiburonesNiv.size()>0) {//compruebo que queden tiburones
+              for (Tiburon cursor:  this.vTiburonesNiv) {
+                cursor.reduceVida();
+                if (cursor.getVida()<=0) {
+                    if(test){
+                        String rec = "muere de viejo el tiburon"+cursor.getIdBicho();
+                        System.out.println(rec);
+                    }
+                    this.muereTiburonAncianoEnNivel(cursor,test);
+                    //eliminaTiburonEnNivel(cursor,test);
                 }
-                eliminaTiburonEnNivel(cursor,test);
             }
-        }
-        for (Pez cursor: this.vPecesNiv){
+         }
+         if (this.vPecesNiv.size()>0) {//compruebo que queden peces
+             for (Pez cursor: this.vPecesNiv){
             cursor.reduceVida();
              if (cursor.getVida()<=0) {
                   if(test){
                       String rec = "muere de viejo el pez"+cursor.getIdBicho();
                       System.out.println(rec);
                 }
-                eliminaPezEnNivel(cursor,test);
+                 this.muerePezAncianoEnNivel(cursor,test);
+                //eliminaPezEnNivel(cursor,test);
             }
         }
+         }
+        
         
     }
     //pre:
@@ -295,54 +382,134 @@ public class nivel {
     }
     public void eliminaPezEnNivel(Pez P,boolean test){
            String idPez;  
+           casilla cas;
            int indexX,indexY;
            indexX=P.getPosicion().getPosicionX();
            indexY=P.getPosicion().getPosicionY();
            idPez=P.getIdBicho();
            this.casillero1.get(indexY).get(indexX).setIdBicho("");//Quitamos la referencia al id del pez
            this.casillero1.get(indexY).get(indexX).setHayPez(false);//borramos al pez de la casilla
-           this.eliminaTiburonesDeVector(idPez,test);
+           //this.eliminaPezDeVector(idPez,test);
+           cas=this.casillero1.get(indexY).get(indexX);
+           this.quitaDeNivel(cas, P, test);
+           
            
     }
+//        public void eliminaPezDevoradoEnNivel(Pez P,boolean test){
+//           String idPez;  
+//           int indexX,indexY;
+//           indexX=P.getPosicion().getPosicionX();
+//           indexY=P.getPosicion().getPosicionY();
+//           idPez=P.getIdBicho();
+//           this.casillero1.get(indexY).get(indexX).setIdBicho("");//Quitamos la referencia al id del pez
+//           this.casillero1.get(indexY).get(indexX).setHayPez(false);//borramos al pez de la casilla
+//           this.eliminaPezDeVector(idPez,test);
+//           
+//    }
      public void eliminaTiburonEnNivel(Tiburon T,boolean test){
             String idTiburon;
-                    
+             casilla cas;       
            int indexX,indexY;
            indexX=T.getPosicion().getPosicionX();
            indexY=T.getPosicion().getPosicionY();
            idTiburon=T.getIdBicho();
            this.casillero1.get(indexY).get(indexX).setIdBicho("");//Quitamos la referencia al id del tib
-           this.casillero1.get(indexY).get(indexX).setHayPez(false);//borramos al tib de la casilla
-           this.eliminaTiburonesDeVector(idTiburon,test);
+           this.casillero1.get(indexY).get(indexX).setHayTiburon(false);//borramos al tib de la casilla
+           cas=this.casillero1.get(indexY).get(indexX);
+           //this.eliminaTiburonesDeVector(idTiburon,test);
+           this.quitaDeNivel(cas, T, test);
     }
     public void eliminaPezDeVector(String idPez,boolean test){
-   
-    Iterator <Pez> cursor =vPecesNiv.iterator();
+        String rec;
+    if (this.vPecesNiv.size()>0) {
+        Iterator <Pez> cursor =vPecesNiv.iterator();
         while (cursor.hasNext()) {            
             if (cursor.next().getIdBicho().equals(idPez)) {
                 cursor.remove();
             }
         }
-        if(test){String rec = "num Peces vivos: "+vPecesNiv.size();
+        if(test){rec = "num Peces vivos: "+vPecesNiv.size();
             System.out.println(rec);
         }
 //            Iterator<String> nombreIterator = nombreArrayList.iterator();
 //while(nombreIterator.hasNext()){
 //	String elemento = nombreIterator.next();
 //	System.out.print(elemento+" / ");}
+    }else { rec=" no hay mas Peces vivos ";
+            System.out.println(rec);
+    }
 }
     
-   
-    public void eliminaTiburonesDeVector(String idTib,boolean test){
-    Iterator <Tiburon> cursor =vTiburonesNiv.iterator();
-        while (cursor.hasNext()) {            
-            if (cursor.next().getIdBicho().equals(idTib)) {
-                cursor.remove();
+   public void  eliminaTiburonDeVector(String idTib,boolean test ){
+   String rec;
+        if (vTiburonesNiv.size()>0) {
+                Iterator <Tiburon> cursor =vTiburonesNiv.iterator();
+            while (cursor.hasNext()) {            
+                if (cursor.next().getIdBicho().equals(idTib)) {
+                    cursor.remove();
+                }
             }
+        }else { 
+            if (test) {
+                rec=" no hay mas Tiburones vivos ";
+            System.out.println(rec);
+            }   
         }
-        if(test){System.out.println("num Tiburones vivos: "+vTiburonesNiv.size());}
-    }
+   }
+    public void eliminaTiburonesDeVector(ArrayList vTiburonesMuertos,boolean test){
+        //pre:
+        //post: recorre cada tiburon que hay en tiburonesMuertos y los elimina
+        //de vTiburonesNiv
+        String rec;
+        
+       if (this.vTempTiburonNiv.size()>0) {//hay tiburones para eliminar
+        Iterator <Tiburon> cursor = vTiburonesMuertos.iterator();
+        while(cursor.hasNext()){
+            eliminaTiburonDeVector(cursor.next().idBicho,test);
+        }
+
+           if(test){
+                        rec="num Tiburones vivos: "+vTiburonesNiv.size();
+                        System.out.println(rec);
+            }
+          // this.vTempTiburonNiv.clear();//reseteo el vector temporal
     
+        }else { 
+           if (test) {
+                rec=" no hay Tiburones muertos de hambre ";
+                System.out.println(rec);
+           }
+            
+       }
+    }
+        //pre:
+        //post: recorre cada tiburon que hay en tiburonesMuertos y los elimina
+        //de vTiburonesNiv
+    public void muevePecesEnNivel(boolean test){
+        casilla origen;
+        
+        this.vTempPezNiv.clear();
+        for (int y=0; y < this.dimensionY; y++) {
+            for (int x=0 ; x < this.dimensionX; x++) {
+                origen=this.casillero1.get(y).get(x);
+                if (origen.isHayPez()){
+                    if (test) {
+                        String rec = " el pez "+origen.getIdBicho()+" ";
+                        System.out.print(rec);
+                    }
+                        decideMovimientoPezEnNivel(origen,test);
+                }
+            }
+    
+            
+            //this.vTempPezNiv.add(pezActual);//añade el pez movido o no al vector temporal de peces   
+        }
+//             this.vPecesNiv.clear();
+//               this.vPecesNiv.addAll(this.vTempPezNiv);
+//               this.vTempPezNiv.clear();
+        
+    
+    }
     public void mueveTiburonesEnNivel(boolean test){
         casilla cursor;
         for (int y = 0; y < this.dimensionY; y++) {//recorre el casillero desde el NO
@@ -350,22 +517,31 @@ public class nivel {
                 cursor=this.casillero1.get(y).get(x);
               //  if (! cursor.isActualizado()){//si no ha sido antes actualizado
                        if (cursor.isHayTiburon()) {//si hay tiburon
-                           if(test){System.out.print("el tiburon "+cursor.getIdBicho()+" ");}
+                           if(test){System.out.print(" el tiburon "+cursor.getIdBicho()+" ");}
                         if(!cursor.isHayPez()){//si no hay caza
                             decideMovimientoTiburonEnNivel(cursor,test);
                         }
-//                        else //hay una pez pendiente de comer
-//                            {
-//                                devoraPez(cursor,test);
-//                            }
+
                     }
                // }
             }
-        }
+      
+           }
+        
+    }
+    
+    public void colocaEnDestinoP(casilla origen,casilla destino){
+    String idPez=dameIdBicho(origen);
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez en el origen
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setIdBicho("");//quito el indice de bicho en la casilla origen
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setHayPez(true);//pongo el pez en el destino
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setIdBicho(idPez);//pongo el indice de  bicho en la casilla destino
+            this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
+            this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setActualizado(true);//casilla actualizada
+    
     }
     public void colocaEnDestinoT(casilla origen,casilla destino,boolean hayCaza){
-       
-        
+             
         if (hayCaza){//no muevo el tiburon y se come al pez
 //            if (this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).isActualizado()==false){//ha pasado un ciclo completo con pez y tiburon en casilla
 //                this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setHayPez(false);//quito el pez destino
@@ -383,6 +559,18 @@ public class nivel {
             this.casillero1.get(origen.getPosicionY()).get(origen.getPosicionX()).setActualizado(true);//casilla actualizada
             this.casillero1.get(destino.getPosicionY()).get(destino.getPosicionX()).setActualizado(true);//casilla actualizada
        // }
+    }
+    
+    public boolean decideMovimientoPezEnNivel(casilla origen,boolean test){
+        casilla destino=dameCasillaAleatoriaContigua(origen,test);
+        if(esCasillaVacia(destino)){
+            if(test){
+                String rec = "el pez "+origen.getIdBicho()+"se mueve ";
+                System.out.print(rec);
+            }
+            colocaEnDestinoP(origen,destino);
+             return true;
+        }else return false;
     }
       public void decideMovimientoTiburonEnNivel(casilla origen,boolean test){
         casilla destino=dameCasillaAleatoriaContigua(origen,test);
@@ -533,6 +721,7 @@ return idBicho;
     //en caso de que sea el primero -1#-1#-1#-1
     //ejemplo 15#00#25#19#-1#-1#-1#-1
     //ejemplo bicho nacido del anterior  10#00#20#10#15#00#25#19
+
 
  
  public boolean esMismoBicho(Acuatico a,Acuatico b){
@@ -685,9 +874,9 @@ return idBicho;
                     }
                }
 
-          if (this.vBebesTiburonNiv.size()>0) {
-               this.vTiburonesNiv.addAll(this.vBebesTiburonNiv);
-               this.vBebesTiburonNiv.clear();
+          if (this.vTempTiburonNiv.size()>0) {
+               this.vTiburonesNiv.addAll(this.vTempTiburonNiv);
+               this.vTempTiburonNiv.clear();
            }
           reanudaNoCeloTiburones(vContadores);
     }
@@ -795,9 +984,9 @@ return idBicho;
                }
                                
          
-           if (this.vBebesPezNiv.size()>0) {
-               this.vPecesNiv.addAll(this.vBebesPezNiv);//añade los bebes Pez a el vector peces
-               this.vBebesPezNiv.clear();//vacio el vector de bebes
+           if (this.vTempPezNiv.size()>0) {
+               this.vPecesNiv.addAll(this.vTempPezNiv);//añade los bebes Pez a el vector peces
+               this.vTempPezNiv.clear();//vacio el vector de bebes
            }
            this.reanudaNoCeloPeces(vContadores);
 
@@ -806,12 +995,17 @@ return idBicho;
          
                 
     }
+//pre:  lifeSpanP pos 2  breedP pos 4
+   //post:reduce el celo de los Peces cuando llega el celo a 0 se intenta reproducir
+ 
+ 
     public int recuentoBichosEnCeloEnNivel(){
     //pre:
    //post:devuelve el numero de bichos que se intentara reproducir 
       return recuentoPecesEnCeloEnNivel()+recuentoTiburonesEnCeloEnNivel();
       
-  }
+  } //pre:
+   //post:devuelve el numero de bichos que se intentara reproducir 
 
     public int recuentoPecesEnCeloEnNivel(){
     //pre:
@@ -825,6 +1019,8 @@ return idBicho;
         }
         return numPecesEnCelo;
     }
+      //pre:
+   //post:devuelve el numero de peces que se intentara reproducir 
    
     public int recuentoTiburonesEnCeloEnNivel(){
     //pre:
@@ -837,6 +1033,8 @@ return idBicho;
         }
         return numTiburonesEnCelo;
     }
+      //pre:
+   //post:devuelve el numero de tiburones que se intentara reproducir 
     
  public int dameTamañoDelEnteroMayor(int a,int b,int c,int d){
     //pre:
