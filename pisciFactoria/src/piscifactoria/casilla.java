@@ -18,6 +18,64 @@ public class casilla {
     private boolean actualizado;
     private String idBicho;
     private String idBicho2;
+    
+    
+       public casilla(){
+     }
+    
+    public casilla(int x,int y){//, int nivel){
+        this.posicionX=x;
+        this.posicionY=y;
+        this.hayPez=false;
+        this.hayTiburon=false;
+        this.actualizado=false;
+        this.idBicho="";
+        this.idBicho="";
+        //this.nivel=nivel;
+    }
+    
+    public void actualizada(){
+        this.actualizado=true;
+    }
+    
+    public void noActualizada(){
+        this.actualizado=false;
+    }
+    
+    public void borraTiburon(){
+        this.hayTiburon=false;
+        this.idBicho="";
+    }
+    public void borraPez(){
+        this.hayPez=false;
+        this.idBicho="";
+    }
+    
+    public void PonTiburon(String idTib){
+        if (this.hayPez) {//devorara al siguiente
+            this.setIdBicho2(this.getIdBicho());//paso el id del pez cazado al indiceBicho2
+        }
+        this.setHayTiburon(true);//pongo el tiburon en el destino
+        this.setIdBicho(idTib);//pongo el indice de  bicho en la casilla destino
+        this.actualizada();
+            
+    }
+    
+    public boolean hayCaza(){
+        return (this.isHayTiburon())&&(this.isHayPez());
+    }
+    
+  
+    public String  devoraPez(){
+        //pre:
+        //post: devolvemos el id del pez devorado y lo eliminamos de la casilla
+        
+        
+                    String idPez=this.getIdBicho2();
+                    this.setIdBicho2("");//Quitamos la referencia al id del pez
+                    this.setHayPez(false);//borramos al pez de la casilla
+                    return idPez;
+    }
 
     public String getIdBicho() {
         return idBicho;
@@ -45,19 +103,9 @@ public class casilla {
         this.actualizado = actualizado;
     }
     
-     public casilla(){
-     }
+   
     
-    public casilla(int x,int y){//, int nivel){
-        this.posicionX=x;
-        this.posicionY=y;
-        this.hayPez=false;
-        this.hayTiburon=false;
-        this.actualizado=false;
-        this.idBicho="";
-        this.idBicho="";
-        //this.nivel=nivel;
-    }
+  
 
     public int getNivel() {
         return nivel;
@@ -100,6 +148,11 @@ public class casilla {
         this.hayTiburon = hayTiburon;
     }
     
+     public String getIdBichoBreve(){
+        String [] piezas=this.idBicho.split("#");
+        
+    return piezas[0]+"#"+piezas[2]+"#"+piezas[3];
+    }
     
     
     public String pintaCasilla(int x,int y,int tamX, int tamY,boolean P,boolean T,boolean test){
@@ -115,8 +168,8 @@ public class casilla {
         String pez="P";
         String ira="X";
         String cas="";
-        if (test){tib=console.getStringInColor(console.ANSI_RED,"T")+reset;}
-        
+        //if (test){tib=console.getStringInColor(console.ANSI_RED,"T")+reset;}
+        tib=console.getStringInColor(console.ANSI_RED,"T")+reset;
         String trazo=cas+"";
        if (T||P){ //HAY BICHO
            if(T&&P){ //BREED tiburon come pez

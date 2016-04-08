@@ -555,7 +555,7 @@ public casilla dameCasillaAleatoria(){
         for (int i = 0; i < this.numNiv; i++) {
 //            nivelAct=(nivel) this.vNiveles.get(i);
 //            nivelAct.devoraPezEnNivel(test);
-            this.vNiveles.get(i).devoraPezEnNivel(test);
+            this.vNiveles.get(i).devoraPecesEnNivel(test);
             
         }
     }
@@ -677,9 +677,9 @@ public casilla dameCasillaAleatoria(){
 //for each (Acuatico cursor: this.vTiburones){
         
     public void muerenTiburonesHambre(boolean test){
-    if(this.numNiv==1){
-        this.vNiveles.get(0).muerenTiburonesHambreEnNivel(test);
-    }
+        if(this.numNiv==1){
+            this.vNiveles.get(0).muerenTiburonesHambreEnNivel(test);
+        }
         
         
     }
@@ -690,11 +690,11 @@ public casilla dameCasillaAleatoria(){
             decrementaContadorGenerico(9);//reduzco la duracion del escenario en uno
             devoraPeces(test);
             muerenTiburonesHambre(test);
-            quitaMarcaActualizado();
             muerenBichosAncianos(test); //por inamicion
             reproduceBichos(test);
             muevePeces(test);
             mueveTiburones(test);
+            quitaMarcaActualizado();
             actualizaContadores();
             
     }

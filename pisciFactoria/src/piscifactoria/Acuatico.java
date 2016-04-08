@@ -5,11 +5,20 @@ package piscifactoria;
  * @author Fernando
  */
 public abstract class Acuatico implements serVivo {
-    protected casilla posicion;
+    protected casilla posicionInicial;
     protected boolean vivo;
     protected boolean enCelo;
     protected int profundidad;
     protected String idBicho;
+    protected String idBichoBreve;
+
+    public casilla getPosicionInicial() {
+        return posicionInicial;
+    }
+
+    public String getIdBichoBreve() {
+        return idBichoBreve;
+    }
     protected int vida;
     protected int celo;
     
@@ -18,7 +27,7 @@ public abstract class Acuatico implements serVivo {
     this.enCelo=false;
     
     }
-
+  
     public boolean isEnCelo() {
         return enCelo;
     }
@@ -60,21 +69,22 @@ public abstract class Acuatico implements serVivo {
     @Override
     public void nace(casilla cuna){
             this.profundidad=cuna.getNivel();
-            this.posicion=cuna;
+            this.posicionInicial=cuna;
             this.vivo=true;
     }
     public void nace(casilla cuna,String id){
             this.profundidad=cuna.getNivel();
-            this.posicion=cuna;
+            this.posicionInicial=cuna;
             this.vivo=true;
-            this.idBicho=id;
-           
-            
+            this.idBicho=id;    
+            String [] piezas;
+            piezas = this.idBicho.split("#");
+            this.idBichoBreve=piezas[2]+"#"+piezas[2]+"#"+piezas[3];
     }
     @Override
     public void muere(casilla tumba){
         this.profundidad=tumba.getNivel();
-        this.posicion=tumba;
+        this.posicionInicial=tumba;
         this.vivo=false;   
     }
     
@@ -85,11 +95,11 @@ public abstract class Acuatico implements serVivo {
 //        this.vivo=true;
 //    }
     public casilla getPosicion() {
-        return posicion;
+        return posicionInicial;
     }
 
     public void setPosicion(casilla posicion) {
-        this.posicion = posicion;
+        this.posicionInicial = posicion;
     }
 
     public boolean isVivo() {
